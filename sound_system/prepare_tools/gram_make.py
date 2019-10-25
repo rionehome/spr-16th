@@ -3,7 +3,7 @@
 # 標準入力からPocket sphinxの文法辞書と単語辞書を作成するプログラム
 import os
 
-dictionary_directory_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')
+dictionary_directory_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../dictionary')
 name = input("作成する辞書の名前を入力してください:")
 
 PATH1 = os.path.join(dictionary_directory_path, 'cmudict-en-us.dict')  # 全単語が入っている単語辞書の絶対パス
