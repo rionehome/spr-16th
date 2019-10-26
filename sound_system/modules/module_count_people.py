@@ -1,4 +1,5 @@
 from . import module_pico.py
+from . import module_beep.py
 
 # 人数のみのカウント
 def count_people(number): 
