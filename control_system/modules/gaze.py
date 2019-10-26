@@ -57,7 +57,7 @@ def main():
     node = Controle()
 
     sleep(1)
-    node.run(-0.3)
+    node.run(-0.3) #　-で時計回り, +で反時計回り速度は自由に変えていいよ
 
     rclpy.spin(node)
     node.destroy_node()
