@@ -1,5 +1,4 @@
 from . import module_pico.py
-from . import module_pico.py
 def count_people(a | b):
     number = number.split('|')
     person_number = 'There are {} people, the number of woman is {}, the number of men is {}.'.format(int(number[0])+int(number[1]), number[0], number[1])
