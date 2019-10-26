@@ -43,7 +43,6 @@ class Controle(Node):
             print(self.twist)
 
     def run(self, a):
-        self.twist.linear.x = 0.0
         self.twist.angular.z = a
         self.pub.publish(self.twist)
 
