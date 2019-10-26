@@ -37,7 +37,7 @@ class Controle(Node):
         print(self.twist)
         print(f"rotated{angle}")
         # if reach target angular
-        if angle > 180 : #移動した角度の合計　?なぜ20?
+        if angle > 180 : #移動した角度の合計　
             print("greater than 180")
             self.stop()
             print(self.twist)
