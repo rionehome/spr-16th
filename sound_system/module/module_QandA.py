@@ -52,22 +52,24 @@ def QandA(number):
         #Setup live_speech
         setup_live_speech(False, spr_dict_path, spr_gram_path, 1e-10)
         module_beep("start")
-        for str(question) not in noise_words:
-            max = 0
-            corec_question = ""
-            if question_key in question_dictionary.key():
-                cos = calc_cos(str(question), question_key)
-                if cos > max:
-                    max = cos
-                    correct_question = question_key
-                    #print(max)
-            question = correct_question
-            if max > 0.8:
-                if str(question) == "I want you to answer with turning":
-                    pause()
-                    module_beep("stop")
-                    print("\n----------------------------\n", str(question), "\n----------------------------\n")
-                    module_pico.speak(question_dictionary[str(question)])
+        for question in live_speech:
+            #print(question)
+            if str(question) not in noise_words:
+                max = 0
+                corec_question = ""
+                for question_key in question_dictionary.key():
+                    cos = calc_cos(str(question), question_key)
+                    if cos > max:
+                        max = cos
+                        correct_question = question_key
+                        #print(max)
+                question = correct_question
+                if max > 0.8:
+                    if str(question) == "I want you to answer with turning":
+                        pause()
+                        module_beep("stop")
+                        print("\n----------------------------\n", str(question), "\n----------------------------\n")
+                        module_pico.speak(question_dictionary[str(question)])
 
                     #Detect yes or no 
 
