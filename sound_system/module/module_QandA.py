@@ -1,8 +1,8 @@
 import os
 from pocketsphinx import LiveSpeech, get_model_path
 import csv
-from . import module_pico
-from . import module_beep
+import module_pico
+import module_beep
 
 import datetime
 
@@ -11,17 +11,19 @@ import math
 file_path = os.path.abspath(__file__)
 question_dictionary = {}
 noise_words = {}
+counter = 0
 
 #Difine path
 spr_dict_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/robocup_2019_sphinx.dict')
 spr_gram_path = file_path.replace(
     'module/module_QandA.py', 'dictionaty/robocup_2019_sphinx.gram')
-txt_path = file_path.replace(
+csv_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/QandA/robocup_2019.csv')
+module_path = get_model_path()
 
 #Male a dictionary from txt file
-with open(txt_path, 'r') as f:
+with open(csv_path, 'r') as f:
     for line in csv.reader(f):
         question_dictionary.setdefault(str(line[0]), str(line[1]))
 
@@ -43,21 +45,21 @@ def QandA(number):
     global live_speech
 
     #Noise list
-    noise_words = read_noise_word(spr_gram_path)
+    #noise_words = read_noise_word(spr_gram_path)
 
     #If I have a question which I can answer, count 1
     while counter < number:
         print("- "+str(counter+1)+" cycle -")
         print("\n[*] LISTENING ...")
         #Setup live_speech
-        setup_live_speech(False, spr_dict_path, spr_gram_path, 1e-10)
-        module_beep("start")
+        setup_live_speech(False, spr_dict_path, spr_gram_path)
+        module_beep.beep("start")
         for question in live_speech:
             #print(question)
             if str(question) not in noise_words:
                 max = 0
-                corec_question = ""
-                for question_key in question_dictionary.key():
+                correct_question = ""
+                for question_key in question_dictionary.keys():
                     cos = calc_cos(str(question), question_key)
                     if cos > max:
                         max = cos
@@ -67,34 +69,34 @@ def QandA(number):
                 if max > 0.8:
                     if str(question) == "I want you to answer with turning":
                         pause()
-                        module_beep("stop")
+                        module_beep.beep("stop")
                         print("\n----------------------------\n", str(question), "\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
 
                     #Detect yes or no 
 
-                else:
+                    else:
+                        pause()
+                        module_beep.beep("stop")
+                        print("\n-------your question--------\n",str(question),"\n----------------------------\n")
+                        print("\n-----------answer-----------\n",question_dictionary[str(question)],"\n----------------------------\n")
+                        module_pico.speak(question_dictionary[str(question)])
+                        counter += 1
+                        break
+                elif 0 < max <= 0.8:
                     pause()
                     module_beep.beep("stop")
-                    print("\n-------your question--------\n",str(question),"\n----------------------------\n")
-                    print("\n-----------answer-----------\n",question_dictionary[str(question)],"\n----------------------------\n")
-                    module_pico.speak(question_dictionary[str(question]))
+                    answer = "Sorry I don't have answer." 
+                    print("\n-----------answer-----------\n",answer,"\n----------------------------\n")
+                    module_pico.speak(answer)
                     counter += 1
                     break
-            elif 0 < max <= 0.8:
-                pause()
-                module_beep.beep("stop")
-                answer = "Sorry I don't have answer." 
-                print("\n-----------answer-----------\n",answer,"\n----------------------------\n")
-                module_pico.speak(answer)
-                counter += 1
-                break
 
-        #noise
-        else:
-            print(".*._noise_.*.")
-            print("\n[*] LISTENING ...")
-            pass
+            #noise
+            else:
+                print(".*._noise_.*.")
+                print("\n[*] LISTENING ...")
+                pass
     counter = 0
     return 1
 
@@ -113,7 +115,7 @@ def pause():
     global live_speech
     live_speech = LiveSpeech(no_search = True)
 
-def read_noise_word(gram):
+'''def read_noise_word(gram):
 
     ###############
     #
@@ -135,9 +137,9 @@ def read_noise_word(gram):
             line = line.replace("<noise>", "").replace(" = ", "").replace("\n", "").replace(";", "")
             words = line.split(" | ")
     
-    return words
+    return words'''
 
-def setup_live_speech(lm, dict_path, jsgf_path, kws_threshold):
+def setup_live_speech(lm, dict_path, jsgf_path):
 
     ###############
     #
@@ -156,8 +158,7 @@ def setup_live_speech(lm, dict_path, jsgf_path, kws_threshold):
     live_speech = LiveSpeech(lm = lm,
                              hmm = os.path.join(module_path, 'en-us'),
                              dic = dict_path,
-                             jsgf_path = file_path
-                             kws_threshold = kws_threshold)
+                             jsgf_path = file_path)
 
 def calc_cos(A, B):
 
@@ -175,10 +176,10 @@ def calc_cos(A, B):
     list_A = []
     list_B = []
     list_A = A.split(" ")
-    list_B = b.split(" ")
+    list_B = B.split(" ")
 
-    lengthA = math.sprt(len(list_A))
-    lengthB = math.sprt(len(list_B))
+    lengthA = math.sqrt(len(list_A))
+    lengthB = math.sqrt(len(list_B))
     math = 0
     for a in list_A:
         if a in list_B:
