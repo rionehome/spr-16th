@@ -7,6 +7,7 @@ import module_beep
 import datetime
 
 import math
+import numpy as np
 
 file_path = os.path.abspath(__file__)
 question_dictionary = {}
@@ -17,10 +18,10 @@ counter = 0
 spr_dict_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/robocup_2019_sphinx.dict')
 spr_gram_path = file_path.replace(
-    'module/module_QandA.py', 'dictionaty/robocup_2019_sphinx.gram')
+    'module/module_QandA.py', 'dictionary/robocup_2019_sphinx.gram')
 csv_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/QandA/robocup_2019.csv')
-module_path = get_model_path()
+model_path = get_model_path()
 
 #Male a dictionary from txt file
 with open(csv_path, 'r') as f:
@@ -55,7 +56,7 @@ def QandA(number):
         setup_live_speech(False, spr_dict_path, spr_gram_path)
         module_beep.beep("start")
         for question in live_speech:
-            #print(question)
+            print(question)
             if str(question) not in noise_words:
                 max = 0
                 correct_question = ""
@@ -156,9 +157,9 @@ def setup_live_speech(lm, dict_path, jsgf_path):
 
     global live_speech
     live_speech = LiveSpeech(lm = lm,
-                             hmm = os.path.join(module_path, 'en-us'),
+                             hmm=os.path.join(model_path, 'en-us'),
                              dic = dict_path,
-                             jsgf_path = file_path)
+                             jsgf = jsgf_path)
 
 def calc_cos(A, B):
 
@@ -178,8 +179,8 @@ def calc_cos(A, B):
     list_A = A.split(" ")
     list_B = B.split(" ")
 
-    lengthA = math.sqrt(len(list_A))
-    lengthB = math.sqrt(len(list_B))
+    lengthA = np.sqrt(len(list_A))
+    lengthB = np.sqrt(len(list_B))
     math = 0
     for a in list_A:
         if a in list_B:
