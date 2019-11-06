@@ -27,4 +27,4 @@ def speak(content):
 
 if __name__ == '__main__':
     content = input("Please input content : ")
-    speak("content")
+    speak(content)
