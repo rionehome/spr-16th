@@ -1,34 +1,73 @@
 #カメラから画像を取得する部分は未実装です
-
-
+import rclpy
+from rclpy.node import Node
 import cv2
 import sys
 import os
 import shutil
+from std_msgs.msg import String
+from sensor_msgs.msg import Image
 
+from cv_bridge import CvBridge
+
+from time import sleep
+
+
+class ImageSystem(Node):
+    def __init__(self):
+        super(ImageSystem, self).__init__('ImageSystem')
+
+        self.senses_publisher = self.create_publisher(
+                String,
+                'cerebrum/command',
+                10
+        )
+
+        self.answor_human_number = self.create_publisher(
+                String,
+                "sound_system/command",
+                10
+        )
+
+        self.create_subscription(
+                String,
+                '/image_system/command',
+                self.command_callback,
+                10
+        )
+
+        self.create_subscription(
+                Image,
+                '/camera/color/image_raw',
+                self.get_image,
+                10
+        )
+
+        self.message = None
+        self.command = None
+
+        self.bridge = CvBridge()
+
+        sleep(1)
+
+def counting():
 #カメラから取得した画像をおいてある場所
 image_path = ""
 #カスケードファイルをおいてある場所
 cascade_path = ""
-
 #画像データを開けなかったときにその旨をメッセージとして出力させる
 image = cv2.imread(image_path)
 if(image is None):
 	print ('画像を開けません')
 	quit()
-
 #取得した画像をグレースケールに変換
 image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
 #カスケードに分類させる(？)
 cascade = cv2.CascadeClassifier(cascade_path)
-
 #物体認識（顔認識）の実行
 facerect = cascade.detectMultiScale(image_gray, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
-
 print ("face rectangle")
 print (facerect)
-
 #ディレクトリの作成
 if len(facerect) > 0:
 	path = os.path.splitext(image_path)
@@ -36,7 +75,6 @@ if len(facerect) > 0:
 	if os.path.isdir(dir_path):
 		shutil.rmtree(dir_path)
 	os.mkdir(dir_path)
-
 i = 0;
 for rect in facerect:
 	#顔だけ切り出して保存
@@ -51,3 +89,6 @@ for rect in facerect:
 files = os.listdir(dir_path)
 count = len(files)  
 print(count)
+
+if __name__ == '__main__':
+    count()
