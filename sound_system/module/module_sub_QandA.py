@@ -50,7 +50,6 @@ def QandA(number):
         module_beep.beep("start")  # 発話開始の合図
         print("- "+str(counter+1)+" cycle -")
         print("\n[*] LISTENING ...")
-        # sleep(1.0)
         for question in Live_speech:
             question = str(question)
             print(question)
