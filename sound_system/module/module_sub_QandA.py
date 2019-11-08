@@ -46,21 +46,23 @@ def QandA(number):
     
     # start riddle game
     while counter < number:
+        # Live_speech = LiveSpeech(no_search=False)
+        module_beep.beep("start")  # 発話開始の合図
         print("- "+str(counter+1)+" cycle -")
         print("\n[*] LISTENING ...")
-        module_beep.beep("start")  # 音声認識開始の合図
-        # sleep(1.0)
         for question in Live_speech:
+            question = str(question)
             print(question)
-            if str(question) in qa_dictionary.keys():
-                question = str(question)
-                # print(question)
-                #Live_speech = LiveSpeech(no_search = True)
-                module_beep.beep("stop")  # 音声認識終了の合図
+            if not question in qa_dictionary.keys():
+                continue
+            else:
+                module_beep.beep("stop")  # 発話終了の合図
+                # Live_speech = LiveSpeech(no_search=True) # 音声認識ストップ
                 print("\n----------------------------\n", question, "\n----------------------------\n")
                 module_pico.speak(qa_dictionary[question])
+                counter += 1
                 break
-        counter += 1
+
     return 1
 
 if __name__ == '__main__':
