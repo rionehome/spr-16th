@@ -3,8 +3,8 @@ import csv
 from pocketsphinx import LiveSpeech, get_model_path
 from time import sleep
 
-import module_pico
-import module_beep
+from . import module_pico
+from . import module_beep
 
 def QandA(number):
 
@@ -62,6 +62,7 @@ def QandA(number):
                 module_pico.speak(qa_dictionary[question])
                 counter += 1
                 break
+
     return 1
 
 if __name__ == '__main__':
