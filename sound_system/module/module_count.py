@@ -11,7 +11,7 @@ def count():
     #
     # return >> None
     #
-    ###############
+    ################
 
     sentence = "I will start riddle game"
     module_pico.speak(sentence)
