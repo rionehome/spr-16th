@@ -1,5 +1,5 @@
 import time
-import module_pico
+from . import module_pico
 
 # countdown
 def count():
