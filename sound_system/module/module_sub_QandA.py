@@ -3,8 +3,8 @@ import csv
 from pocketsphinx import LiveSpeech, get_model_path
 from time import sleep
 
-import module_pico
-import module_beep
+from . import module_pico
+from . import module_beep
 
 def QandA(number):
 
@@ -46,18 +46,22 @@ def QandA(number):
     
     # start riddle game
     while counter < number:
-        module_beep.beep("start")  # 音声認識開始の合図
         print("- "+str(counter+1)+" cycle -")
         print("\n[*] LISTENING ...")
-        sleep(1.0)
+        module_beep.beep("start")  # 音声認識開始の合図
+        # sleep(1.0)
         for question in Live_speech:
-            question = str(question)
-            # print(question)
-            module_beep.beep("stop")  # 音声認識終了の合図
-            print("\n----------------------------\n", question, "\n----------------------------\n")
-            module_pico.speak(qa_dictionary[question])
+            print(question)
+            if str(question) in qa_dictionary.keys():
+                question = str(question)
+                # print(question)
+                #Live_speech = LiveSpeech(no_search = True)
+                module_beep.beep("stop")  # 音声認識終了の合図
+                print("\n----------------------------\n", question, "\n----------------------------\n")
+                module_pico.speak(qa_dictionary[question])
+                break
         counter += 1
     return 1
 
 if __name__ == '__main__':
-    QandA(1)
+    QandA(5)
