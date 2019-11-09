@@ -47,9 +47,8 @@ class Turtlebot(Node):
             self.stop()
             print(self.twist)
             
-            if self.OnEnd is None:
-                self.sendFinish("sound_system", "Command:finish,Content:None")
-                self.OnEnd = True
+            if !(self.OnEnd is None):
+                self.OnEnd()
 
 
     def run(self, a):
