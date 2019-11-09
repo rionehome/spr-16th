@@ -1,4 +1,6 @@
 from setuptools import setup
+from glob import glob
+
 
 package_name = 'control_system'
 
@@ -8,12 +10,11 @@ setup(
     packages=[],
     py_modules=[
         'control_system',
-        'turn',
-        "find_speaker",
     ],
     install_requires=['setuptools'],
     data_files=[
-        ('lib/' + package_name, ['package.xml']),
+        'lib/' + package_name + '/package.xml',
+        ('lib/' + package_name + '/module', glob('module/*'))
     ],
     zip_safe=True,
     author='momonga',
@@ -32,9 +33,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'control_system = control_system:main',
-            'turn = turn:main',
-            'find_speaker = find_speaker:main',
+            'control_system = control_system:main'
         ],
     },
 )

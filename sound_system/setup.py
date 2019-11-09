@@ -15,9 +15,7 @@ setup(
         ('lib/' + package_name, ['package.xml']),
         ('lib/' + package_name+'/module',glob('module/*')),
         ('lib/sound_system/dictionary/',glob('dictionary/*')),
-        ('lib/sound_system/beep/',glob('beep/*')),
-        ('lib/sound_system/dictionary/QandA',
-            ['dictionary/QandA/robocup_2019.csv'])
+        ('lib/sound_system/beep/',glob('beep/*'))
     ],
     zip_safe=True,
     author='momonga',
