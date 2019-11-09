@@ -13,9 +13,9 @@ setup(
     install_requires=['setuptools'],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name+'/module',glob('module/*')),
-        ('lib/sound_system/dictionary/',glob('dictionary/*')),
-        ('lib/sound_system/beep/',glob('beep/*'))
+        ('lib/' + package_name,glob('module/*.py')),
+        ('lib/sound_system',glob('dictionary/**/*')),
+        ('lib/sound_system',glob('beep/**/*'))
     ],
     zip_safe=True,
     author='momonga',
