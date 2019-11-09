@@ -1,4 +1,4 @@
-from tuning import Tuning
+import module_tuning
 import usb.core
 import usb.util
 import time
@@ -8,7 +8,7 @@ def angular():
     dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)
     #print dev
     if dev:
-        Mic_tuning = Tuning(dev)
+        Mic_tuning = module_tuning.Tuning(dev)
         while True:
             try:
                 print(Mic_tuning.direction)
