@@ -41,7 +41,7 @@ class Controle(Node):
         print(self.twist)
         print(f"rotated{angle}")
         # if reach target angular
-        if angle > 180: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
+        if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
             print("greater than 180")
             self.stop()
             print(self.twist)
