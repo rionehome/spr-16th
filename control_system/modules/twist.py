@@ -22,6 +22,8 @@ class Controle(Node):
         self.twist = Twist()
 
         self.degree = 180
+
+        self.OnEnd = None
         
         #self.orientation = Quaternion()
 
@@ -42,9 +44,13 @@ class Controle(Node):
         print(f"rotated{angle}")
         # if reach target angular
         if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
-            print("greater than 180")
             self.stop()
             print(self.twist)
+            
+            if self.OnEnd is None:
+                self.sendFinish("sound_system", "Command:finish,Content:None")
+                self.OnEnd = True
+
 
     def run(self, a):
         self.twist.linear.x = 0.0
