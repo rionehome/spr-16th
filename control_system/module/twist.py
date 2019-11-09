@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Quaternion
@@ -45,6 +46,9 @@ class Turtlebot(Node):
         # if reach target angular
         if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
             self.stop()
+            reset_flag = Bool()
+            reset_flag.data = True
+            self.publish_reset.publish(reset_flag) #角度０の地点（基準点）を更新
             print(self.twist)
             
             if !(self.OnEnd != None):
