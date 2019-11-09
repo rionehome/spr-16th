@@ -47,7 +47,7 @@ class Turtlebot(Node):
             self.stop()
             print(self.twist)
             
-            if !(self.OnEnd is None):
+            if !(self.OnEnd != None):
                 self.OnEnd()
 
 
