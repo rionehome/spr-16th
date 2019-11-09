@@ -13,9 +13,7 @@ setup(
     ],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name+'/detect_modules/detect_human',glob('detect_modules/detect_human/*')),
-        ('lib/'+package_name+'/detect_modules/detect_sex',glob('detect_modules/detect_sex/*')),
-        ("lib/" + package_name + "/model",glob('model/*'))
+        ('lib/' + package_name, glob('./**/*'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -56,16 +56,17 @@ class Control(Node):
         Command = self.Command.split(":")[1]
 
         if Command == "turn":
-            self.turtle.OnEnd = lambda:
-               if self.sender == "sound":
-                    self.sendFinishFlag("sound_system", "Command:finish,Content:None")
-
-                if self.sender == "cerebrum":
-                    self.sendFinishFlag("cerebrum", "Command:{0},Content:None".format(self.Command))
-
+            self.turtle.OnEnd = self.OnEnd
             self.turtle.degree = degree
             self.turtle.run(-30.0)
             print("[*] START TURN {0} DEGREE".format(degree), flush=True)
+
+    def OnEnd():
+        if self.sender == "sound":
+            self.sendFinishFlag("sound_system", "Command:finish,Content:None")
+
+        if self.sender == "cerebrum":
+            self.sendFinishFlag("cerebrum", "Command:{0},Content:None".format(self.Command))
 
     def sendFinishFlag(self, topic, content):
 
