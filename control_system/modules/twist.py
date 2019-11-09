@@ -7,7 +7,7 @@ from time import sleep
 
 from numpy import *
 
-class Controle(Node):
+class Turtlebot(Node):
     def __init__(self):
         super().__init__("turtlebot2")
         self.publish_velocity = self.create_publisher(Twist, "/turtlebot2/commands/velocity")
@@ -65,7 +65,7 @@ class Controle(Node):
 def main():
     rclpy.init()
 
-    node = Controle()
+    node = Turtlebot()
 
     sleep(1)
     #node.degree=90
