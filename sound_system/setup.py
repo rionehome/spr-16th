@@ -13,19 +13,15 @@ setup(
     install_requires=['setuptools'],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name+'/modules',glob('modules/*')),
-        ('lib/sound_system/dictionary/',glob('dictionary/*')),
-        ('lib/sound_system/beep/',glob('beep/*')),
-        ('lib/sound_system/dictionary/QandA',
-            ['dictionary/QandA/qanda.csv']),
-        ('lib/sound_system/log',
-            ['log/log.txt'])
+        ('lib/' + package_name,glob('module/*.py')),
+        ('lib/sound_system',glob('dictionary/**/*')),
+        ('lib/sound_system',glob('beep/**/*'))
     ],
     zip_safe=True,
     author='momonga',
-    author_email='is0506he@ed.ritsumei.ac.jp'
+    author_email='is0506he@ed.ritsumei.ac.jp',
     maintainer='momonga',
-    maintainer_email='is0506he@ed.ritsumei.ac.jp
+    maintainer_email='is0506he@ed.ritsumei.ac.jp',
     keywords=['ROS2'],
     classifiers=[
         'Intended Audience :: Developers',
