@@ -1,5 +1,5 @@
 import time
-import module_pico
+from . import module_pico
 
 # countdown
 def count():
@@ -11,7 +11,7 @@ def count():
     #
     # return >> None
     #
-    ###############
+    ################
 
     sentence = "I will start riddle game"
     module_pico.speak(sentence)
