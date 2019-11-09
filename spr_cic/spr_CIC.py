@@ -43,6 +43,7 @@ class CIC(Node):
             break
 
     def receive(self, msg):
+        print("receive at CIC " + msg, flash=True)
         flag = msg.data.split(",")[0].split(":")[1]
 
         number = 0

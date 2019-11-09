@@ -14,7 +14,7 @@ setup(
     install_requires=['setuptools'],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name, glob('./**/*'))
+        ('lib/' + package_name + '/module', glob('./module/*'))
     ],
     zip_safe=True,
     author='momonga',

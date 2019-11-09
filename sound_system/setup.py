@@ -12,10 +12,12 @@ setup(
     ],
     install_requires=['setuptools'],
     data_files=[
-        ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name,glob('module/*.py')),
-        ('lib/sound_system',glob('dictionary/**/*')),
-        ('lib/sound_system',glob('beep/**/*'))
+        ('lib/' + package_name, ['package.xml', 'sound_system.py']),
+        ('lib/' + package_name + '/module',glob('module/*.py')),
+        ('lib/sound_system/dictionary',glob('dictionary/*.dict')),
+        ('lib/sound_system/dictionary',glob('dictionary/*.gram')),
+        ('lib/sound_system/dictionary/QandA',glob('dictionary/QandA/*')),
+        ('lib/sound_system/beep',glob('beep/*'))
     ],
     zip_safe=True,
     author='momonga',

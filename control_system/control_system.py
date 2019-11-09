@@ -39,7 +39,7 @@ class Control(Node):
         rclpy.spin(self.turtle)
 
     def receiveFlag(self, msg):
-        Command, Contents = msg.data.split(",")
+        self.Command, Contents = msg.data.split(",")
 
         Contents = Contents.split(":")
         degree = int(Contents[1])
@@ -49,7 +49,7 @@ class Control(Node):
         else:
             degree = 360 - degree
 
-        sender = Contents[2]
+        self.sender = Contents[2]
 
         print(degree, flush=True)
 
@@ -61,7 +61,7 @@ class Control(Node):
             self.turtle.run(-30.0)
             print("[*] START TURN {0} DEGREE".format(degree), flush=True)
 
-    def OnEnd():
+    def OnEnd(self):
         if self.sender == "sound":
             self.sendFinishFlag("sound_system", "Command:finish,Content:None")
 
