@@ -4,6 +4,8 @@ from std_msgs.msg import String
 import rclpy
 from rclpy.node import Node
 
+from time import sleep
+
 class ImageSystem(Node):
     def __init__(self):
         super(ImageSystem, self).__init__('ImageSystem')
@@ -18,13 +20,6 @@ class ImageSystem(Node):
                 String,
                 '/image_system/command',
                 self.command_callback,
-                10
-        )
-
-        self.create_subscription(
-                Image,
-                '/camera/color/image_raw',
-                self.get_image,
                 10
         )
 
@@ -43,8 +38,8 @@ class ImageSystem(Node):
         command = msg.data.split(',')
 
         if 'capture' == command[0].replace('Command:', ''):
-            if modules.screenshot() == 1:
-                self.temp_number = modules.face_detect()
+            if screenshot() == 1:
+                self.temp_number = face_detect()
                 if self.temp_number >= 0:
                     self.cerebrum_publisher(
                         'Return:0,Content:'+str(self.temp_number))
