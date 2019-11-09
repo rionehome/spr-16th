@@ -92,7 +92,7 @@ class Control(Node):
 def main():
     rclpy.init()
 
-    node = Turn()
+    node = Control()
 
     rclpy.spin(node)
 
