@@ -51,7 +51,7 @@ class Turtlebot(Node):
             self.publish_reset.publish(reset_flag) #角度０の地点（基準点）を更新
             print(self.twist)
             
-            if !(self.OnEnd != None):
+            if self.OnEnd is None:
                 self.OnEnd()
 
 

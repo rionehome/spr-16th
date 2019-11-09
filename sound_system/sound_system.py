@@ -51,9 +51,8 @@ class SoundSystem(Node):
 
         # 音限定位
         if 'augular' == command[0].replace('Command:', ''):
-            if module_angular.augular() == 1:
-                self.temp_angular = module_angular.angular()
-                if self.temp_angular > 0:
+            self.temp_angular = module_angular.angular()
+                if self.temp_angular >= 0:
                     self.cerebrum_publisher(
                     'Command:find,Content:'+str(self.temp_angular))
 
