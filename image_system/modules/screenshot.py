@@ -2,6 +2,7 @@ import pyrealsense2 as rs
 import numpy as np
 from time import sleep
 import cv2
+import os
 
 file_path = os.path.abspath(__file__)
 image_path = file_path.replace(
@@ -31,7 +32,7 @@ try:
 
         cv2.imshow('RealSense', images)
         cv2.waitKey(1)
-        cv2.imwrite(image_path)
+        cv2.imwrite(image_path,'realsense.jpg')
         sleep(1)
         i = i + 1
 finally:
