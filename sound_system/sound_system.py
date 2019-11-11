@@ -18,7 +18,7 @@ class SoundSystem(Node):
         self.command = None
 
         self.create_subscription(
-            String, 'sound_system/command',
+            String, '/sound_system/command',
             self.command_callback,
             10
         )
@@ -29,7 +29,7 @@ class SoundSystem(Node):
             10
         )
     def command_callback(self, msg):
-    
+        print("sound received" + msg.data, flush=True)
         self.command = msg.data
         command = msg.data.split(',')
 
@@ -37,31 +37,40 @@ class SoundSystem(Node):
 
         # 10秒カウント
         if 'count' == command[0].replace('Command:', ''):
+            print("start count", flush=True)
             if module_count.count() == 1:
+                print("end count", flush=True)
                 self.cerebrum_publisher('Return:0,Content:None')
+
         # 人数発話
         if 'count_people' == command[0].replace('Command:', ''):
+            print("start count_people", flush=True)
             if module_count_people.count_people(str(command[1].replace('Content:', ''))) == 1: # ここの引数に人数を入れる
+                print("end count_people", flush=True)
                 self.cerebrum_publisher('Return:0,Content:None')
         
         # QandA開始
         if 'QandA' == command[0].replace('Command:', ''):
+            print("start QandA", flush=True)
             if module_QandA.QandA(5) == 1:
+                print("end QandA", flush=True)
                 self.cerebrum_publisher('Return:0,Content:None')
 
         # 音限定位
         if 'augular' == command[0].replace('Command:', ''):
-            if module_angular.angular() == 1:
-                self.temp_angular = module_angular.angular()
-                if self.temp_angular > 0:
-                    self.cerebrum_publisher(
-                    'Command:find,Content:'+str(self.temp_angular))
+
+            print("start angular", flush=True)
+            self.temp_angular = module_angular.angular()
+            if self.temp_angular >= 0:
+                print("end angular", flush=True)
+                self.cerebrum_publisher(
+                'Command:find,Content:'+str(self.temp_angular))
 
 
     def cerebrum_publisher(self, message):
         _trans_message = String()
         _trans_message.data = message
-
+        print("sound send" + _trans_message, flush=True)
         self.senses_publisher.publish(_trans_message)
     
 def main():

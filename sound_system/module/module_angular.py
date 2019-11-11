@@ -1,4 +1,4 @@
-import module_tuning
+from . import module_tuning
 import usb.core
 import usb.util
 import time
