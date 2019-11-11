@@ -41,7 +41,7 @@ class SoundSystem(Node):
                 self.cerebrum_publisher('Return:0,Content:None')
         # 人数発話
         if 'count_people' == command[0].replace('Command:', ''):
-            if module_count_people.count_people(str(message)) == 1: # ここの引数に人数を入れる
+            if module_count_people.count_people(str(command[1].replace('Content:', ''))) == 1: # ここの引数に人数を入れる
                 self.cerebrum_publisher('Return:0,Content:None')
         
         # QandA開始
@@ -51,7 +51,7 @@ class SoundSystem(Node):
 
         # 音限定位
         if 'augular' == command[0].replace('Command:', ''):
-            if module_angular.augular() == 1:
+            if module_angular.angular() == 1:
                 self.temp_angular = module_angular.angular()
                 if self.temp_angular > 0:
                     self.cerebrum_publisher(
