@@ -58,6 +58,7 @@ class SoundSystem(Node):
 
         # 音限定位
         if 'augular' == command[0].replace('Command:', ''):
+
             print("start angular", flush=True)
             self.temp_angular = module_angular.angular()
             if self.temp_angular >= 0:
