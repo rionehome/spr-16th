@@ -36,9 +36,13 @@ class Control(Node):
             10
         )
 
-        rclpy.spin(self.turtle)
+        try:
+            rclpy.spin(self.turtle)
+        except TypeError:
+            pass
 
     def receiveFlag(self, msg):
+        print("control received" + msg.data, flush=True)
         self.Command, Contents = msg.data.split(",")
 
         Contents = Contents.split(":")
@@ -78,6 +82,7 @@ class Control(Node):
             self.flag_publisher_sound.publish(self.flag)
 
             self.flag.data = "Command:angular,Content:None"
+            print("control send" + self.flag, flush=True)
 
             self.flag_publisher_cerebrum.publish(self.flag)
 
@@ -87,6 +92,7 @@ class Control(Node):
             self.flag = String()
             self.flag.data = content + ":control_system"
 
+            print("control send" + self.flag, flush=True)
             self.flag_publisher_cerebrum.publish(self.flag)
 
 

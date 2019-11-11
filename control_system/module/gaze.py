@@ -33,9 +33,6 @@ class Controle(Node):
             angle = -arccos(w)*360 / pi #cosの長さを角度に変換
         else:
             angle =  arccos(w)*360 / pi
-
-        print(self.twist)
-        print(f"rotated{angle}")
         # if reach target angular
         if angle > 180 : #移動した角度の合計　
             print("greater than 180")

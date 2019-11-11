@@ -32,15 +32,18 @@ class ImageSystem(Node):
     def command_callback(self, msg):
 
         # contain command data
+        print("image recerved" + msg.data, flush=True)
         self.command = msg.data
 
         # Command:speak , Content:hello!
         command = msg.data.split(',')
 
         if 'capture' == command[0].replace('Command:', ''):
-            if screenshot() == 1:
-                self.temp_number = face_detect()
+            print("start capture", flush=True)
+            if screenshot.screenshot() == 1:
+                self.temp_number = face_detect.detect()
                 if self.temp_number >= 0:
+                    print("end capture", flush=True)
                     self.cerebrum_publisher(
                         'Return:0,Content:'+str(self.temp_number))
 
@@ -48,6 +51,7 @@ class ImageSystem(Node):
     def cerebrum_publisher(self, message):
 
         self._trans_message.data = message
+        print("image send" + self._trans_message, flush=True)
         self.senses_publisher.publish(self._trans_message)
 
 

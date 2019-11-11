@@ -41,8 +41,6 @@ class Turtlebot(Node):
         if angle < 0:
             angle = angle+360
 
-        print(self.twist)
-        print(f"rotated{angle}")
         # if reach target angular
         if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
             self.stop()

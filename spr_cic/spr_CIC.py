@@ -35,15 +35,17 @@ class CIC(Node):
         print("[*] START SPR", flush=True)
 
     def state(self):
+        print("state start , executing {}, did {}" .format(self.executing, self.did))
         for number, task in self.tasks.items():
             self.executing = number
             if self.executing != self.did:
                 self.send_with_content(task[0], task[1], task[2])
+                print("CIC send content", flush=True)
             self.did = self.executing
             break
 
     def receive(self, msg):
-        print("receive at CIC " + msg, flash=True)
+        print("CIC received" + msg.data, flush=True)
         flag = msg.data.split(",")[0].split(":")[1]
 
         number = 0
