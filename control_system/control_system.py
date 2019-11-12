@@ -92,7 +92,7 @@ class Control(Node):
             self.flag = String()
             self.flag.data = content + ":control_system"
 
-            print("control send" + self.flag, flush=True)
+            print("control send" + str(self.flag), flush=True)
             self.flag_publisher_cerebrum.publish(self.flag)
 
 
