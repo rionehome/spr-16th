@@ -48,7 +48,7 @@ class Control(Node):
         Contents = Contents.split(":")
         degree = int(Contents[1])
 
-        if 0 < degree and degree <= 180:
+        if 0 < degree and degree < 180:
             degree *= -1
         else:
             degree = 360 - degree

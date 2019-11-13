@@ -35,7 +35,7 @@ class CIC(Node):
         print("[*] START SPR", flush=True)
 
     def state(self):
-        print("state start , executing {}, did {}" .format(self.executing, self.did))
+        print("state start , executing {}, did {}" .format(self.executing, self.did), flush=True)
         for number, task in self.tasks.items():
             self.executing = number
             if self.executing != self.did:
@@ -45,17 +45,22 @@ class CIC(Node):
             break
 
     def receive(self, msg):
-        print("CIC received" + msg.data, flush=True)
+        print("CIC received " + msg.data, flush=True)  
         flag = msg.data.split(",")[0].split(":")[1]
+        print("msg data " + str(msg.data), flush=True)
+        print("flag " + flag, flush=True)   #### flag = 0となっている  #####
 
-        number = 0
-        tasks = None
+        number = "0"
+        task = None
 
         for number, task in self.tasks.items():
+            print("number " + number, flush=True)
+            print("task " + str(task), flush=True)
             break
 
-        if flag == task[1]:
-            print(self.tasks.pop(self.executing), flush=True)
+        # if flag == task[1]:
+        print("finish " + str(self.tasks.pop(self.executing)), flush=True)  #### ここに入っていかない ###
+        # print("CCC", flush=True)   ############### ここまで行けた if 文がおかしかった ###############
 
     def send_with_content(self, topic, Command, Content):
         self.sound_system_pub = self.create_publisher(

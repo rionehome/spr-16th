@@ -39,8 +39,8 @@ class Turtlebot(Node):
         else:
             angle =  arccos(w)*360 / pi
         if angle < 0:
-            angle = angle+360
-
+            angle = angle+359
+        print(angle, flush=True)
         # if reach target angular
         if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
             self.stop()
@@ -49,7 +49,7 @@ class Turtlebot(Node):
             self.publish_reset.publish(reset_flag) #角度０の地点（基準点）を更新
             print(self.twist)
             
-            if self.OnEnd is None:
+            if self.OnEnd is not None:
                 self.OnEnd()
 
 
@@ -57,7 +57,7 @@ class Turtlebot(Node):
         self.twist.linear.x = 0.0
         self.twist.angular.z = a
         self.publish_velocity.publish(self.twist)
-        print('running...')
+        print('running...', flush=True)
 
     def stop(self):
         self.twist.angular.z = 0.0 #目標の角度になったら止める=(0)にする
