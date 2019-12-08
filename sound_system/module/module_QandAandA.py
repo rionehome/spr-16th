@@ -1,5 +1,6 @@
 import module_beep
-from . import module_tuning
+import module_tuning
+import module_pico
 
 import usb.core
 import usb.util
@@ -45,21 +46,23 @@ def angular():
 
 
     while True:
-        if dev:
-            for phrase in live_speech:
-                cos=0
-                for question_key in question_dictionary.keys():
-                    cos = calc_cos(str(phrase),question_key)
-                    if cos>0.8:
-                        module_beep.beep("stop")
-                        print("\n-------your question--------\n",str(phrase),"\n----------------------------\n")
-                        print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n")
-                        angular=Mic_tuning.direction
-                        answer=question_dictionary[str(phrase)]
-                        return_list = [angular, answer]
-                        return return_list
-                    else:
-                        continue
+        # if dev:
+        for phrase in live_speech:
+            cos=0
+            for question_key in question_dictionary.keys():
+                cos = calc_cos(str(phrase),question_key)
+                if cos>0.8:
+                    module_beep.beep("stop")
+                    print("\n-------your question--------\n",str(phrase),"\n----------------------------\n")
+                    print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n")
+                    angular=Mic_tuning.direction
+                    answer=question_dictionary[str(phrase)]
+                    return_list = [angular, answer]
+                    module_pico.speak(answer)
+                    print(angular)
+                    return return_list
+                else:
+                    continue
 
 
 
