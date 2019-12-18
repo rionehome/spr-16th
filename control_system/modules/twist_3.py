@@ -24,7 +24,7 @@ class ControlSystem(Node):
 
         self.twist = Twist()
 
-        self.goal_degree = 500
+        self.goal_degree = 180
 
         self.is_running=False
 
@@ -64,6 +64,11 @@ class ControlSystem(Node):
             self.goal_degree += 360
         elif  180 < self.goal_degree < 359:
             self.goal_degree -= 360
+
+        if self.goal_degree == 180:  #180度が観測されないのでgoal_degreeが180度になったら179度に変換する
+            self.goal_degree = 179
+        if self.goal_degree == -180:
+            self.goal_degree = -179
         
         print(self.goal_degree)
         
@@ -130,7 +135,7 @@ def main():
     node = ControlSystem()
 
     sleep(1)
-    node.turn_to(500, 30.0)
+    node.turn_to(180, 30.0)
 
     rclpy.spin(node)
     node.destroy_node()
