@@ -1,26 +1,24 @@
 from setuptools import setup
-from glob import glob
 
-
-package_name = 'control_system'
+package_name = 'spr_cic'
 
 setup(
     name=package_name,
     version='0.0.1',
     packages=[],
     py_modules=[
-        'control_system',
+        'spr_CIC',
     ],
     install_requires=['setuptools'],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name + '/module', glob('./module/*'))
+        ("share/" + package_name, ["launch/CIC.launch.py"])
     ],
     zip_safe=True,
     author='momonga',
     author_email='is0506he@ed.ritsumei.ac.jp',
     maintainer='momonga',
-    maintainer_email='is0506he@ed.ritsumei.ac.jp',
+    maintainer_email='is0449sh@ed.ritsumei.ac.jp',
     keywords=['ROS2'],
     classifiers=[
         'Intended Audience :: Developers',
@@ -33,7 +31,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'control_system = control_system:main'
+            'CIC = spr_CIC:main',
         ],
     },
 )

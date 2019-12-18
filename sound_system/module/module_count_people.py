@@ -1,5 +1,5 @@
-import module_pico
-import module_beep
+from . import module_pico
+from . import module_beep
 
 
 # 人数のみのカウント
