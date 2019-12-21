@@ -55,7 +55,7 @@ class SoundSystem(Node):
                 self.temp_angular = module_angular.angular()
                 if self.temp_angular > 0:
                     self.cerebrum_publisher(
-                    'Command:find,Content:'+str(self.temp_angular))
+                    'Return:0,Content:'+str(self.temp_angular))
 
 
     def cerebrum_publisher(self, message):
