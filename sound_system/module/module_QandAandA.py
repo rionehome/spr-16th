@@ -1,6 +1,6 @@
-import module_beep
-import module_tuning
-import module_pico
+from . import module_beep
+from . import module_tuning
+from . import module_pico
 
 import usb.core
 import usb.util
@@ -58,6 +58,12 @@ def angular():
                     angular=Mic_tuning.direction
                     answer=question_dictionary[str(phrase)]
                     return_list = [angular, answer]
+                    print("角度は {0} \n 答えは {1}".format(return_list[0], return_list[1], flush=True))
+                    return int (return_list[0])
+
+                    # この先回転終了の合図が来れば答えを発話する関数を作る
+                    # 引数：上の答え
+                    # 戻り値：1
                     module_pico.speak(answer)
                     print(angular)
                     return return_list

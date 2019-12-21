@@ -4,10 +4,12 @@ from rclpy.qos import qos_profile_sensor_data
 
 from module import module_count
 from module import module_count_people
-from module import module_angular
 from module import module_QandA
+from module import module_QandAandA
 from module import module_pico
 from module import module_beep
+#from module import module_angular
+
 
 from std_msgs.msg import String
 
@@ -60,7 +62,7 @@ class SoundSystem(Node):
         if 'augular' == command[0].replace('Command:', ''):
 
             print("start angular", flush=True)
-            self.temp_angular = module_angular.angular()
+            self.temp_angular = module_QandAandA.angular()
             if self.temp_angular >= 0:
                 print("end angular", flush=True)
                 self.cerebrum_publisher(
@@ -70,7 +72,7 @@ class SoundSystem(Node):
     def cerebrum_publisher(self, message):
         _trans_message = String()
         _trans_message.data = message
-        print("sound send" + _trans_message, flush=True)
+        print("sound send" + str(_trans_message), flush=True)
         self.senses_publisher.publish(_trans_message)
     
 def main():
