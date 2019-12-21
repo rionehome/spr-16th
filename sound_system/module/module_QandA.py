@@ -1,14 +1,15 @@
 import os
-from pocketsphinx import LiveSpeech, get_model_path
-import csv
-import module_pico
-import module_beep
-
 import datetime
-
 import math
+import csv
 import numpy as np
+from pocketsphinx import LiveSpeech, get_model_path
 
+from . import module_pico
+from . import module_beep
+
+
+print("最初開始")
 file_path = os.path.abspath(__file__)
 question_dictionary = {}
 noise_words = {}
@@ -50,8 +51,8 @@ def QandA(number):
 
     #If I have a question which I can answer, count 1
     while counter < number:
-        print("- "+str(counter+1)+" cycle -")
-        print("\n[*] LISTENING ...")
+        print("- "+str(counter+1)+" cycle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", flush=True)
+        print("\n[*] LISTENING ...", flush=True)
         #Setup live_speech
         setup_live_speech(False, spr_dict_path, spr_gram_path)
         module_beep.beep("start")
@@ -74,6 +75,7 @@ def QandA(number):
                         print("\n----------------------------\n", str(question), "\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
 
+
                     #Detect yes or no 
 
                     else:
@@ -82,6 +84,7 @@ def QandA(number):
                         print("\n-------your question--------\n",str(question),"\n----------------------------\n")
                         print("\n-----------answer-----------\n",question_dictionary[str(question)],"\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
+                        print("\n\n!!!!!!!!!!", flush=True)
                         counter += 1
                         break
                 elif 0 < max <= 0.8:
@@ -90,6 +93,7 @@ def QandA(number):
                     answer = "Sorry I don't have answer." 
                     print("\n-----------answer-----------\n",answer,"\n----------------------------\n")
                     module_pico.speak(answer)
+                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     counter += 1
                     break
 
