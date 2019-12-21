@@ -44,7 +44,7 @@ class ControlSystem(Node):
 
         self.twist = Twist()
 
-        #self.goal_degree = 180
+        self.goal_degree = 180
 
         self.is_running=False
 
@@ -106,16 +106,16 @@ class ControlSystem(Node):
         if command =="turn":
             self.turn_to(int(content),30.0)
     """
-
-    CICから受け取る
+    The method receive command from CIC. 
+    CICからのcommandを受け取る。
     """
 
     def parse_command(self,commad_str):
-        m = re.match(r"Command:([a-z]+),Content:(.+):cerebrum")
+        m = re.match(r"Command:([a-z]+),Content:(.+):cerebrum",commad_str)
         return m.groups()
     """
-
-    データの読み取り
+    The method resding commad data.
+    データの読み取り。
     """
 
     def stop_turtlebot(self):
@@ -134,7 +134,8 @@ class ControlSystem(Node):
         msg_str.data = message_str
         self.command_publisher.publish(msg_str)
     """
-    データを送る
+    The method send data to CIC. 
+    CICにデータを送る。
     """
 
     def reset_pose(self):
