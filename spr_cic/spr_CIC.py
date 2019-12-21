@@ -13,6 +13,8 @@ class CIC(Node):
 
         self.create_subscription(String, "/cerebrum/command", self.subscribe_command, 10)
 
+        sleep(1)
+
         self.publisher_dict = {
             "sound": self.create_publisher(String,"/sound_system/command",10), 
             "control":self.create_publisher(String,"/control_system/command",10),
@@ -42,7 +44,8 @@ class CIC(Node):
         を5回繰り返すことになる。
         """
         
-        self.executing_task_number = None
+        self.executing_task_number = 0
+
         self.latest_return = None
 
         self.run_task(0)
@@ -62,7 +65,7 @@ class CIC(Node):
     def run_task(self, task_number):
         if task_number  != self.executing_task_number + 1:
             return
-        if len(self.tasks) =< executing_task_number:
+        if len(self.tasks) <= executing_task_number:
             return
 
         self.executing_task_number = task_number
@@ -77,7 +80,8 @@ class CIC(Node):
         msg = String()
         msg.data = f"Command:{command},Content:{str(content)}:cerebrum"
         self.publisher_dict[target].publish(msg)
-        print("send to /{0}_system/command Command:{1} Content:{2}".format(topic, command, content), flush=True))
+        print(f"task {self.executing_task_number} send.",flush=True)
+        print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
 
 
 def main():
