@@ -3,7 +3,7 @@ import numpy as np
 from time import sleep
 import cv2
 import os
-//
+
 file_path = os.path.abspath(__file__)
 image_path = file_path.replace(
     'modules/rere.py', 'image/realsense.jpg')
