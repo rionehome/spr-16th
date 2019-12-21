@@ -102,7 +102,7 @@ class ControlSystem(Node):
     """
 
     def subscribe_command(self,msg):
-        command,content = self.command_str(msg.data)
+        command,content = self.parse_command(msg.data)
         if command =="turn":
             self.turn_to(int(content),30.0)
     """
