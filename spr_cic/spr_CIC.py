@@ -20,7 +20,7 @@ class CIC(Node):
             "control":self.create_publisher(String,"/control_system/command",10),
             "image":self.create_publisher(String,"/image_system/command",10),
         }
-        self.tasks = [
+        self.tasks [
             ["sound",   "count",   "None"],
             ["control", "turn",    180   ],
             ["image",   "capture", "None"],
