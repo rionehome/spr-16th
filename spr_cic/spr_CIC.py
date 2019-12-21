@@ -17,15 +17,15 @@ class CIC(Node):
 
         self.publisher_dict = {
             "sound": self.create_publisher(String,"/sound_system/command",10), 
-            "control":self.create_publisher(String,"/control_system/command",10),
-            "image":self.create_publisher(String,"/image_system/command",10),
+            "control": self.create_publisher(String,"/control_system/command",10),
+            "image": self.create_publisher(String,"/image_system/command",10),
         }
-        self.tasks [
+        self.tasks = [
             ["sound",   "count",   "None"],
             ["control", "turn",    180   ],
             ["image",   "capture", "None"],
             ["sound",   "QandA",   5     ],
-            *([
+            (*[
                 ["sound",   "angular_and_question", "None"],
                 ["control", "turn",    lambda d: d ],
                 ["sound",   "answer", "None"]
