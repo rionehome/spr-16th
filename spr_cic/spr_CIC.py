@@ -23,14 +23,28 @@ class CIC(Node):
             ["control", "turn",    180   ],
             ["image",   "capture", "None"],
             ["sound",   "QandA",   5     ],
-            ["sound",   "angular", "None"],
-            ["sound",   "angular", "None"],
-            ["sound",   "angular", "None"],
-            ["sound",   "angular", "None"],
-            ["sound",   "angular", "None"],
+            *([
+                ["sound",   "angular_and_question", "None"],
+                ["control", "turn",    lambda d: d ],
+                ["sound",   "answer", "None"]
+            ] * 5) 
         ]
+        """
+        [タスクのターゲット, コマンド名, 与えるデータ] の配列。
+
+        与えるデータは 単純な値もしくは１つ前のタスクの結果を引数に受け取る関数。
+
+        *([タスク] * 5) の部分は、配列 を 5回繰り返して展開している。
+        これで、
+            ["sound",   "angular_and_question", "None"],
+            ["control", "turn",    lambda d: d ],
+            ["sound",   "answer", "None"]
+        を5回繰り返すことになる。
+        """
         
         self.executing_task_number = None
+        self.latest_return = None
+
         self.run_task(0)
 
     def subscribe_command(self,msg):
@@ -40,6 +54,8 @@ class CIC(Node):
         print(f"task {self.executing_task_number} is done.",flush=True)
         print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
         print(f"return: {return_str}, content:{content}",flush=True)
+
+        self.latest_return = return_str
 
         self.run_task(self.executing_task_number + 1)
 
@@ -53,7 +69,11 @@ class CIC(Node):
 
         sleep(1)
 
-        target,command,content = task[task_number]
+        target, command, content = task[task_number]
+
+        if callable(content):
+            content = content(self.latest_return)
+
         msg = String()
         msg.data = f"Command:{command},Content:{str(content)}:cerebrum"
         self.publisher_dict[target].publish(msg)
