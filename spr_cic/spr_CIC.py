@@ -21,13 +21,9 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
-            ["sound",   "count",   "None"],
-            ["control", "turn",    180   ],
-            ["image",   "capture", "None"],
-            ["sound",   "QandA",   5     ],
             (*[
                 ["sound",   "angular_and_question", "None"],
-                ["control", "turn",    lambda d: d ],
+                ["control", "turn",    0 ],
                 ["sound",   "answer", "None"]
             ] * 5) 
         ]
@@ -48,11 +44,18 @@ class CIC(Node):
 
         self.latest_return = None
 
+        self.angular =  -1
+
         self.run_task(0)
 
     def subscribe_command(self,msg):
         m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
         return_str,content = m.groups()
+
+        if int(content) >= 0:
+            # 180度回転と音源定位のタスクにおいてcontrol_systemに角度を送る
+            self.angular = int(content)
+            print("angular{self.angular}")
 
         print(f"task {self.executing_task_number} is done.",flush=True)
         print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
@@ -63,8 +66,8 @@ class CIC(Node):
         self.run_task(self.executing_task_number + 1)
 
     def run_task(self, task_number):
-        if task_number  != self.executing_task_number + 1:
-            return
+        # if task_number  != self.executing_task_number + 1:
+        #     return
         if len(self.tasks) <= self.executing_task_number:
             return
 
@@ -73,6 +76,10 @@ class CIC(Node):
         sleep(1)
 
         target, command, content = self.tasks[task_number]
+
+        if self.angular >= 0:
+            content = str(self.angular)
+            print(f"content is {content}")
 
         if callable(content):
             content = content(self.latest_return)

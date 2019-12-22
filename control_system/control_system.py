@@ -90,7 +90,7 @@ class ControlSystem(Node):
 
     def odometry_subscriber(self, msg):
         angle = self.get_angle_by_pose(msg.pose)
-        print(angle)
+        #print(angle)
         
         if (self.goal_degree > 0 and angle > self.goal_degree) or (self.goal_degree < 0 and angle < self.goal_degree):
             self.stop_turtlebot()
