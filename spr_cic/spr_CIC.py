@@ -63,16 +63,16 @@ class CIC(Node):
         self.run_task(self.executing_task_number + 1)
 
     def run_task(self, task_number):
-        if task_number  != self.executing_task_number + 1:
-            return
-        if len(self.tasks) <= executing_task_number:
+        # if task_number  != self.executing_task_number + 1:
+        #     return
+        if len(self.tasks) <= self.executing_task_number:
             return
 
         self.executing_task_number = task_number
 
         sleep(1)
 
-        target, command, content = task[task_number]
+        target, command, content = self.tasks[task_number]
 
         if callable(content):
             content = content(self.latest_return)
