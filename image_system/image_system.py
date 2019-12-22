@@ -32,7 +32,7 @@ class ImageSystem(Node):
     def command_callback(self, msg):
 
         # contain command data
-        print("image recerved" + msg.data, flush=True)
+        print("image recerved " + str(msg.data), flush=True)
         self.command = msg.data
 
         # Command:speak , Content:hello!
@@ -51,7 +51,7 @@ class ImageSystem(Node):
     def cerebrum_publisher(self, message):
 
         self._trans_message.data = message
-        print("image send" + self._trans_message, flush=True)
+        print("image send " + str(self._trans_message), flush=True)
         self.senses_publisher.publish(self._trans_message)
 
 

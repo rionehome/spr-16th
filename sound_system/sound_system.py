@@ -31,7 +31,7 @@ class SoundSystem(Node):
             10
         )
     def command_callback(self, msg):
-        print("sound received" + msg.data, flush=True)
+        print("sound received " + msg.data, flush=True)
         self.command = msg.data
         command = msg.data.split(',')
 
@@ -76,7 +76,7 @@ class SoundSystem(Node):
     def cerebrum_publisher(self, message):
         _trans_message = String()
         _trans_message.data = message
-        print("sound send" + str(_trans_message), flush=True)
+        print("sound send " + str(_trans_message.data), flush=True) # 間違えてたここでエラーが出たら .dataいらないかも
         self.senses_publisher.publish(_trans_message)
     
 def main():

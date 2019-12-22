@@ -1,4 +1,4 @@
-#カメラから画像を取得する部分は未実装です
+#カメラから画像を取得する部分は未実装です.
 import rclpy
 from rclpy.node import Node
 import cv2
