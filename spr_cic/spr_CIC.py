@@ -61,14 +61,14 @@ class CIC(Node):
         print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
         print(f"return: {return_str}, content:{content}",flush=True)
 
-        self.latest_return = return_str
+        # self.latest_return = content #前のlam 関数のやつ
 
         self.run_task(self.executing_task_number + 1)
 
-    def run_task(self, task_number):
-        # if task_number  != self.executing_task_number + 1:
+    def run_task(self, task_number): 
+        # if task_number  != self.executing_task_number + 1: #最初の task で引っかかる → おそらく最初は　task_number==executing_task_number==0だからかな
         #     return
-        if len(self.tasks) <= self.executing_task_number:
+        if len(self.tasks) <= self.executing_task_number:  
             return
 
         self.executing_task_number = task_number
@@ -77,12 +77,12 @@ class CIC(Node):
 
         target, command, content = self.tasks[task_number]
 
-        if self.angular >= 0:
+        if self.angular >= 0:   #sound から得られた angular を content に代入する
             content = str(self.angular)
             print(f"content is {content}")
 
-        if callable(content):
-            content = content(self.latest_return)
+        # if callable(content): #sound から得られた angular を content に代入する
+        #     content = content(self.latest_return)
 
         msg = String()
         msg.data = f"Command:{command},Content:{str(content)}:cerebrum"
