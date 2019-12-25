@@ -6,6 +6,7 @@ from module import module_count
 from module import module_count_people
 from module import module_angular
 from module import module_QandA
+from module import module_QandAandA
 from module import module_pico
 from module import module_beep
 
@@ -56,15 +57,18 @@ class SoundSystem(Node):
                 print("end QandA", flush=True)
                 self.cerebrum_publisher('Return:0,Content:None')
 
-        # 音限定位
-        if 'augular' == command[0].replace('Command:', ''):
-
-            print("start angular", flush=True)
-            self.temp_angular = module_angular.angular()
+        # 音限定位➀
+        if 'angular_and_question' == command[0].replace('Command:', ''):
+            return_list = module_QandAandA.angular()
+            self.temp_angular = return_list[0]
+            self.answer_angular = return_list[1]
             if self.temp_angular >= 0:
-                print("end angular", flush=True)
-                self.cerebrum_publisher(
-                'Command:find,Content:'+str(self.temp_angular))
+                self.cerebrum_publisher('Return:0,Content:' + str(self.temp_angular))
+
+        # 音源定位➁
+        if 'answer' == command[0].replace('Command:', ''):
+            module_pico.speak(str(self.answer_angular)) 
+            self.cerebrum_publisher('Return:0,Content:None')
 
 
     def cerebrum_publisher(self, message):
