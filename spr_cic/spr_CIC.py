@@ -64,7 +64,7 @@ class CIC(Node):
         print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
         print(f"return: {return_str}, content:{content}",flush=True)
 
-        self.latest_return = content #前のlam 関数のやつ
+        self.latest_return = content #前のlambda関数
 
         self.run_task(self.executing_task_number + 1)
 
@@ -79,10 +79,6 @@ class CIC(Node):
         sleep(1)
 
         target, command, content = self.tasks[task_number]
-
-        # if self.angular >= 0:   #sound から得られた angular を content に代入する
-        #     content = str(self.angular)
-        #     print(f"content is {content}")
 
         if callable(content): #sound から得られた angular を content に代入する
             content = content(self.latest_return)
