@@ -53,8 +53,8 @@ def angular():
                 cos = calc_cos(str(phrase),question_key)
                 if cos>0.8:
                     module_beep.beep("stop")
-                    print("\n-------your question--------\n",str(phrase),"\n----------------------------\n")
-                    print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n")
+                    print("\n-------your question--------\n",str(phrase),"\n----------------------------\n", flush=True)
+                    print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n", flush=True)
                     angular=Mic_tuning.direction
                     answer=question_dictionary[str(phrase)]
                     return_list = [angular, answer]
