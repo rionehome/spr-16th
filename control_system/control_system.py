@@ -90,7 +90,8 @@ class ControlSystem(Node):
 
     def odometry_subscriber(self, msg):
         angle = self.get_angle_by_pose(msg.pose)
-        print(angle)
+        if self.is_running == True:
+            print(angle)
         
         if (self.goal_degree > 0 and angle > self.goal_degree) or (self.goal_degree < 0 and angle < self.goal_degree):
             self.stop_turtlebot()
@@ -150,14 +151,18 @@ class ControlSystem(Node):
 
     def turn_to(self, goal_degree, angular_speed):
         if (not self.is_running) and (angular_speed==0) :     #止まってる際に(速さ)0を連続で送らないようにする
+            print("if(not self.is_running) and (angular_speed==0)")
             return
 
         if angular_speed < 0.0:
             raise Exception("angular_speed must be greater than 0.")
 
+        print("received run_to")
+
         self.goal_degree = self.normalize_goal_degree(goal_degree)
 
         self.reset_pose()
+        print("reset_pose is done")
 
         self.twist.linear.x = 0.0
         self.twist.angular.z = angular_speed if self.goal_degree < 0.0 else -1.0 *angular_speed 
