@@ -4,11 +4,12 @@ from rclpy.qos import qos_profile_sensor_data
 
 from module import module_count
 from module import module_count_people
-from module import module_angular
 from module import module_QandA
 from module import module_QandAandA
 from module import module_pico
 from module import module_beep
+#from module import module_angular
+
 
 from std_msgs.msg import String
 
@@ -71,10 +72,11 @@ class SoundSystem(Node):
             self.cerebrum_publisher('Return:0,Content:None')
 
 
+
     def cerebrum_publisher(self, message):
         _trans_message = String()
         _trans_message.data = message
-        print("sound send " + str(_trans_message.data), flush=True) # 間違えてた
+        print("sound send " + str(_trans_message.data), flush=True) # 間違えてたここでエラーが出たら .dataいらないかも
         self.senses_publisher.publish(_trans_message)
     
 def main():
