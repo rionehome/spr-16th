@@ -6,7 +6,7 @@ import os
 
 file_path = os.path.abspath(__file__)
 image_path = file_path.replace(
-    'modules/rere.py', 'image/realsense.jpg')
+    'modules/screenshot.py', 'image/realsense.jpg')
 i = 0
 
 def screenshot():
@@ -42,3 +42,6 @@ def screenshot():
         pipeline.stop()
         
         return 1
+
+if __name__=='__main__':
+    screenshot()
