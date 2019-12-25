@@ -70,7 +70,7 @@ class SoundSystem(Node):
         if 'answer' == command[0].replace('Command:', ''):
             module_pico.speak(str(self.answer_angular)) 
             self.cerebrum_publisher('Return:0,Content:None')
-        
+
 
 
     def cerebrum_publisher(self, message):

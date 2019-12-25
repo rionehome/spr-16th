@@ -21,6 +21,10 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
+                ["sound",   "count",   "None"],
+                ["control", "turn",    180   ],
+                ["image",   "capture", "None"],
+                ["sound",   "QandA",   "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
                 ["control", "turn",    0 ],
@@ -40,34 +44,28 @@ class CIC(Node):
         を5回繰り返すことになる。
         """
         
-        self.executing_task_number = 0
+        self.executing_task_number = -1
 
         self.latest_return = None
 
-        self.angular =  -1
 
+        self.angular =  -1
         self.run_task(0)
 
     def subscribe_command(self,msg):
         m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
         return_str,content = m.groups()
-
-        if int(content) >= 0:
-            # 180度回転と音源定位のタスクにおいてcontrol_systemに角度を送る
-            self.angular = int(content)
-            print("angular{self.angular}")
-
-        print(f"task {self.executing_task_number} is done.",flush=True)
-        print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
+          
+        print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
         print(f"return: {return_str}, content:{content}",flush=True)
 
-        # self.latest_return = content #前のlam 関数のやつ
+        self.latest_return = content 
 
         self.run_task(self.executing_task_number + 1)
 
     def run_task(self, task_number): 
-        # if task_number  != self.executing_task_number + 1: #最初の task で引っかかる → おそらく最初は　task_number==executing_task_number==0だからかな
-        #     return
+        if task_number  != self.executing_task_number + 1: 
+            return
         if len(self.tasks) <= self.executing_task_number:  
             return
 
@@ -77,18 +75,13 @@ class CIC(Node):
 
         target, command, content = self.tasks[task_number]
 
-        if self.angular >= 0:   #sound から得られた angular を content に代入する
-            content = str(self.angular)
-            print(f"content is {content}")
-
-        # if callable(content): #sound から得られた angular を content に代入する
-        #     content = content(self.latest_return)
+        if callable(content): #sound から得られた angular を content に代入する
+            content = content(self.latest_return)
 
         msg = String()
         msg.data = f"Command:{command},Content:{str(content)}:cerebrum"
         self.publisher_dict[target].publish(msg)
-        print(f"task {self.executing_task_number} send.",flush=True)
-        print(f"{str(self.tasks[self.executing_task_number])}",flush=True)
+        print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])} send.",flush=True)
 
 
 def main():

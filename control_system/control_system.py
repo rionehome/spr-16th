@@ -44,7 +44,7 @@ class ControlSystem(Node):
 
         self.twist = Twist()
 
-        self.goal_degree = 180
+        self.goal_degree = 0
 
         self.is_running=False
 
@@ -76,9 +76,9 @@ class ControlSystem(Node):
             goal_degree -= 360
 
         if goal_degree == 180:  #180度が観測されないのでgoal_degreeが180度になったら179度に変換する
-            goal_degree = 179
+            goal_degree = 178
         if goal_degree == -180:
-            goal_degree = -179
+            goal_degree = -178
         
         print("GOAL: " + str(goal_degree))
         
@@ -90,15 +90,12 @@ class ControlSystem(Node):
 
     def odometry_subscriber(self, msg):
         angle = self.get_angle_by_pose(msg.pose)
-        #print(angle)
-        
-        if (self.goal_degree > 0 and angle > self.goal_degree) or (self.goal_degree < 0 and angle < self.goal_degree):
-            self.stop_turtlebot()
+        self.stop_turtlebot_judgement(angle)
+        if self.is_running == True:
+            print(angle)
     """
     this method is callback of `/turtlebot2/odometry` topic. 
-    this method is judgment of stopping turtlebot
     `/turtlebot2/odometry` トピックのコールバック。
-    turtlebot の停止の判定
     """
 
     def subscribe_command(self,msg):
@@ -116,6 +113,16 @@ class ControlSystem(Node):
     """
     The method resding commad data.
     データの読み取り。
+    """
+
+    def stop_turtlebot_judgement(self,turtlebot_angle):
+        if self.is_running == True:
+            if (self.goal_degree > 0 and turtlebot_angle > self.goal_degree) or (self.goal_degree < 0 and turtlebot_angle < self.goal_degree):
+                print(f"goal_degree :{self.goal_degree},angular :{turtlebot_angle}")
+                self.stop_turtlebot()
+    """
+    this method is judgment of stopping turtlebot
+    turtlebot の停止の判定
     """
 
     def stop_turtlebot(self):
@@ -150,10 +157,13 @@ class ControlSystem(Node):
 
     def turn_to(self, goal_degree, angular_speed):
         if (not self.is_running) and (angular_speed==0) :     #止まってる際に(速さ)0を連続で送らないようにする
+            print("if(not self.is_running) and (angular_speed==0)")
             return
 
         if angular_speed < 0.0:
             raise Exception("angular_speed must be greater than 0.")
+
+        print("received run_to")
 
         self.goal_degree = self.normalize_goal_degree(goal_degree)
 
