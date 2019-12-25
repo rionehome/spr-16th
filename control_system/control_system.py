@@ -91,8 +91,8 @@ class ControlSystem(Node):
     def odometry_subscriber(self, msg):
         angle = self.get_angle_by_pose(msg.pose)
         self.stop_turtlebot_judgement(angle)
-        # if self.is_running == True:
-        #     print(angle)
+        if self.is_running == True:
+            print(angle)
     """
     this method is callback of `/turtlebot2/odometry` topic. 
     `/turtlebot2/odometry` トピックのコールバック。
