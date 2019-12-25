@@ -1,6 +1,6 @@
-import module_beep
-import module_tuning
-import module_pico
+from . import module_beep
+from . import module_tuning
+from . import module_pico
 
 import usb.core
 import usb.util
