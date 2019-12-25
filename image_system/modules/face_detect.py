@@ -16,6 +16,7 @@ def detect():
     #カメラから取得した画像をおいてある場所
     image_path = file_path.replace(
         'modules/face_detect.py', 'image/realsense.jpg')
+        
     #カスケードファイルをおいてある場所
     cascade_path = file_path.replace(
         'modules/face_detect.py', 'cascades/haarcascade_frontalface_default.xml')
