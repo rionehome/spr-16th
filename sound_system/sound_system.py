@@ -63,7 +63,7 @@ class SoundSystem(Node):
             return_list = module_QandAandA.angular()
             self.temp_angular = return_list[0]
             self.answer_angular = return_list[1]
-            if self.temp_angular > 0:
+            if self.temp_angular >= 0:
                 self.cerebrum_publisher('Return:0,Content:' + str(self.temp_angular))
 
         # 音源定位➁
