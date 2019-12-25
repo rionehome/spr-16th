@@ -21,10 +21,10 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
-            ["sound",   "count",   "None"],
-            ["control", "turn",    180   ],
-            ["image",   "capture", "None"],
-            ["sound",   "QandA",   5     ],
+                ["sound",   "count",   "None"],
+                ["control", "turn",    180   ],
+                ["image",   "capture", "None"],
+                ["sound",   "QandA",   "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
                 ["control", "turn",    lambda d: d ],
@@ -48,7 +48,7 @@ class CIC(Node):
 
         self.latest_return = None
 
-        self.angular =  -1
+        #self.angular =  -1
 
         self.run_task(0)
 
@@ -56,10 +56,10 @@ class CIC(Node):
         m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
         return_str,content = m.groups()
 
-        if type(content) is int:
-            # 180度回転と音源定位のタスクにおいてcontrol_systemに角度を送る
-            self.angular = int(content)
-            print("get angular : {self.angular}")
+        # if type(content) is int:
+        #     # 180度回転と音源定位のタスクにおいてcontrol_systemに角度を送る
+        #     self.angular = int(content)
+        #     print("get angular : {self.angular}")
 
         print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
         print(f"return: {return_str}, content:{content}",flush=True)
