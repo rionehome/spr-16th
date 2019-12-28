@@ -2,4 +2,5 @@ build
 log
 install
 __pycache__
+*.jpg
 turtlebot_bringup

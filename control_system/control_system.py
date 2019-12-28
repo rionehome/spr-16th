@@ -1,21 +1,16 @@
 import rclpy
 from rclpy.node import Node
-
-from std_msgs.msg import String, Bool
+from std_msgs.msg import Bool, String
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
-
-from module.twist import Turtlebot
-
+from geometry_msgs.msg import Quaternion
 from time import sleep
-
+import re
 from numpy import *
 
-class Control(Node):
+class ControlSystem(Node):
     def __init__(self):
-        super().__init__("Control")
-
-        self.turtle = Turtlebot()
+        super().__init__("ControlSystem")
 
         self.flag_publisher_cerebrum = self.create_publisher(
             String,
@@ -23,86 +18,174 @@ class Control(Node):
             10
         )
 
-        self.flag_publisher_sound = self.create_publisher(
-            String,
-            "/sound_system/command",
+        self.create_subscription(
+            Odometry,
+            "/turtlebot2/odometry",
+            self.odometry_subscriber,
             10
         )
 
         self.create_subscription(
             String,
-            "/control_system/command",
-            self.receiveFlag,
+            '/control_system/command',
+            self.subscribe_command,
             10
         )
 
-        try:
-            rclpy.spin(self.turtle)
-        except TypeError:
-            pass
+        self.command_publisher = self.create_publisher(
+            String,
+            '/cerebrum/command',
+            10
+        )
 
-    def receiveFlag(self, msg):
-        print("control received" + msg.data, flush=True)
-        self.Command, Contents = msg.data.split(",")
+        self.velocity_publisher = self.create_publisher(Twist, "/turtlebot2/commands/velocity",10)
 
-        Contents = Contents.split(":")
-        degree = int(Contents[1])
+        self.reset_publisher = self.create_publisher(Bool, "/turtlebot2/commands/reset_pose", 10)
 
-        if 0 < degree and degree <= 180:
-            degree *= -1
+        self.twist = Twist()
+
+        self.goal_degree = 0
+
+        self.is_running=False
+
+        self.angle=0
+
+    def get_angle_by_pose(self, pose):
+        z = pose.pose.orientation.z 
+        w = pose.pose.orientation.w #w,zはクオータニオン表記　
+
+        angle = 0 #初期値
+
+        if z > 0.0:
+            angle = -arccos(w)*360 / pi #cosの長さを角度に変換
         else:
-            degree = 360 - degree
+            angle =  arccos(w)*360 / pi
 
-        self.sender = Contents[2]
+        return angle
+    """
+    this method calcurates angle by odometry.
+    odometry から角度を計算する。
+    """
 
-        print(degree, flush=True)
+    def normalize_goal_degree(self, goal_degree):
+        goal_degree %= (360 if goal_degree>0 else -360) 
 
-        Command = self.Command.split(":")[1]
+        if -360 < goal_degree < -180:
+            goal_degree += 360
+        elif  180 < goal_degree < 359:
+            goal_degree -= 360
 
-        if Command == "turn":
-            self.turtle.OnEnd = self.OnEnd
-            self.turtle.degree = degree
-            self.turtle.run(-30.0)
-            print("[*] START TURN {0} DEGREE".format(degree), flush=True)
+        if goal_degree == 180:  #180度が観測されないのでgoal_degreeが180度になったら179度に変換する
+            goal_degree = 178
+        if goal_degree == -180:
+            goal_degree = -178
+        
+        print("GOAL: " + str(goal_degree))
+        
+        return goal_degree
+    """
+    this method is to chang angle.
+    止まる角度を-180~180の間に変換する。
+    """
 
-    def OnEnd(self):
-        if self.sender == "sound":
-            self.sendFinishFlag("sound_system", "Command:finish,Content:None")
+    def odometry_subscriber(self, msg):
+        angle = self.get_angle_by_pose(msg.pose)
+        self.stop_turtlebot_judgement(angle)
+        if self.is_running == True:
+            print(angle)
+    """
+    this method is callback of `/turtlebot2/odometry` topic. 
+    `/turtlebot2/odometry` トピックのコールバック。
+    """
 
-        if self.sender == "cerebrum":
-            self.sendFinishFlag("cerebrum", "Command:{0},Content:None".format(self.Command))
+    def subscribe_command(self,msg):
+        command,content = self.parse_command(msg.data)
+        if command =="turn":
+            self.turn_to(int(content),30.0)
+    """
+    The method receive command from CIC. 
+    CICからのcommandを受け取る。
+    """
 
-    def sendFinishFlag(self, topic, content):
+    def parse_command(self,commad_str):
+        m = re.match(r"Command:([a-z]+),Content:(.+):cerebrum",commad_str)
+        return m.groups()
+    """
+    The method resding commad data.
+    データの読み取り。
+    """
 
-        if topic == "sound_system":
+    def stop_turtlebot_judgement(self,turtlebot_angle):
+        if self.is_running == True:
+            if (self.goal_degree > 0 and turtlebot_angle > self.goal_degree) or (self.goal_degree < 0 and turtlebot_angle < self.goal_degree):
+                print(f"goal_degree :{self.goal_degree},angular :{turtlebot_angle}")
+                self.stop_turtlebot()
+    """
+    this method is judgment of stopping turtlebot
+    turtlebot の停止の判定
+    """
 
-            self.flag = String()
-            self.flag.data = content + ":control_system"
+    def stop_turtlebot(self):
+        self.twist.angular.z = 0.0
+        print("STOP TURTLEBOT")
+        self.is_running=False
+        self.velocity_publisher.publish(self.twist)
+        self.cerebrum_publisher('Return:0,Content:True')
+    """
+    the method let turtlebot stopping. 
+    turtlebot を止まらせる。
+    """
 
-            self.flag_publisher_sound.publish(self.flag)
+    def cerebrum_publisher(self, message_str):
+        msg_str = String()
+        msg_str.data = message_str
+        self.command_publisher.publish(msg_str)
+    """
+    The method send data to CIC. 
+    CICにデータを送る。
+    """
 
-            self.flag.data = "Command:angular,Content:None"
-            print("control send" + self.flag, flush=True)
+    def reset_pose(self):
+        reset_flag = Bool()
+        reset_flag.data = True
+        self.reset_publisher.publish(reset_flag)
+        print("pose rested")
+    """
+    this method set pose of turtlebot to (0, 0, 0).
+    turtlebot のポーズを(0, 0, 0)にセットする。
+    """
 
-            self.flag_publisher_cerebrum.publish(self.flag)
+    def turn_to(self, goal_degree, angular_speed):
+        if (not self.is_running) and (angular_speed==0) :     #止まってる際に(速さ)0を連続で送らないようにする
+            print("if(not self.is_running) and (angular_speed==0)")
+            return
 
+        if angular_speed < 0.0:
+            raise Exception("angular_speed must be greater than 0.")
 
-        elif topic == "cerebrum":
+        print("received run_to")
 
-            self.flag = String()
-            self.flag.data = content + ":control_system"
+        self.goal_degree = self.normalize_goal_degree(goal_degree)
 
-            print("control send" + self.flag, flush=True)
-            self.flag_publisher_cerebrum.publish(self.flag)
+        self.reset_pose()
 
+        self.twist.linear.x = 0.0
+        self.twist.angular.z = angular_speed if self.goal_degree < 0.0 else -1.0 *angular_speed 
+        self.is_running = angular_speed != 0
+
+        self.velocity_publisher.publish(self.twist)
+        print("running...")
+    """
+    this method let turtlebot running.
+    Turtlebot を走らせる。
+    """
 
 def main():
     rclpy.init()
 
-    node = Control()
+    node = ControlSystem()
 
     rclpy.spin(node)
-
 
 if __name__ == "__main__":
     main()

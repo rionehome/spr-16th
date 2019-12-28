@@ -42,7 +42,7 @@ class Turtlebot(Node):
             angle = angle+360
 
         # if reach target angular
-        if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声藩用メモ)
+        if angle > self.degree: #移動した角度の合計　回転する角度の入力(音声班用メモ)
             self.stop()
             reset_flag = Bool()
             reset_flag.data = True
