@@ -1,5 +1,6 @@
 build
 log
 install
-__pycache__
-turtlebot_bringup
+__pycache__/
+turtlebot_bringup/
+speak_log/
