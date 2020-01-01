@@ -15,10 +15,11 @@ def detect():
     file_path = os.path.abspath(__file__)
     #カメラから取得した画像をおいてある場所
     image_path = file_path.replace(
-        'modules/face.py', 'image/realsense.jpg')
+        'modules/face_detect.py', 'image/realsense.jpg')
+        
     #カスケードファイルをおいてある場所
     cascade_path = file_path.replace(
-        'modules/face.py', 'cascades/haarcascade_frontalface_default.xml')
+        'modules/face_detect.py', 'cascades/haarcascade_frontalface_default.xml')
 
     #画像データを開けなかったときにその旨をメッセージとして出力させる
     image = cv2.imread(image_path)

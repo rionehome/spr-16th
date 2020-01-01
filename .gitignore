@@ -4,3 +4,4 @@ install
 __pycache__/
 turtlebot_bringup/
 speak_log/
+*.jpg
