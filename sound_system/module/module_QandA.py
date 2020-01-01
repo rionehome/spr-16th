@@ -5,8 +5,8 @@ import csv
 import numpy as np
 from pocketsphinx import LiveSpeech, get_model_path
 
-from . import module_pico
-from . import module_beep
+import module_pico
+import module_beep
 
 
 print("最初開始")
@@ -22,6 +22,7 @@ spr_gram_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/robocup_2019_sphinx.gram')
 csv_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/QandA/robocup_2019.csv')
+log_path = file_path.replace('module/module_QandA.py', 'speak_log/{}.txt').format(str(datetime.datetime.now()))
 model_path = get_model_path()
 
 #Male a dictionary from txt file
@@ -84,6 +85,12 @@ def QandA(number):
                         print("\n-------your question--------\n",str(question),"\n----------------------------\n")
                         print("\n-----------answer-----------\n",question_dictionary[str(question)],"\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
+
+                        # logの作成
+                        log = open(log_path, 'a')
+                        log.write(str(datetime.datetime.now()) + " [question]:  " + str(question) + "\n")
+                        log.write(str(datetime.datetime.now()) + " [answer]:  " + question_dictionary[str(question)] + "\n")
+
                         print("\n\n!!!!!!!!!!", flush=True)
                         counter += 1
                         break
