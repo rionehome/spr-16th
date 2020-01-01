@@ -6,7 +6,7 @@ import os
 
 file_path = os.path.abspath(__file__)
 image_path = file_path.replace(
-    'modules/screenshot.py', 'image/realsense.jpg')
+    'modules/screenshot.py', 'image/people_image.jpg')
 
 
 def screenshot():
