@@ -66,7 +66,8 @@ def angular():
                     log = open(log_path, 'a')
                     log.write(str(datetime.datetime.now()) + " [question]:  " + str(phrase) + "\n")
                     log.write(str(datetime.datetime.now()) + " [answer]:  " + answer + "\n")
-
+                    log.close()
+                    
                     return_list = [angular, answer]
                     print("角度は {0} \n 答えは {1}".format(return_list[0], return_list[1], flush=True))
                     return return_list
