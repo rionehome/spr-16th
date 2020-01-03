@@ -19,6 +19,15 @@ Svoxpico
 ```
 $ sudo apt-get install -y libttspico-utils
 ```
+ReSpeaker
+
+以下パソコンにReSpeakerを繋いだ状態で
+
+```
+$ cd sound_system/prepare_tools/
+$ sh respeaker.sh
+```
+
 ## Usage
 
 ```
