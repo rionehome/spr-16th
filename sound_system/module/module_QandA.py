@@ -5,8 +5,8 @@ import csv
 import numpy as np
 from pocketsphinx import LiveSpeech, get_model_path
 
-import module_pico
-import module_beep
+from . import module_pico
+from . import module_beep
 
 
 print("最初開始")
@@ -90,7 +90,8 @@ def QandA(number):
                         log = open(log_path, 'a')
                         log.write(str(datetime.datetime.now()) + " [question]:  " + str(question) + "\n")
                         log.write(str(datetime.datetime.now()) + " [answer]:  " + question_dictionary[str(question)] + "\n")
-
+                        log.close()
+                        
                         print("\n\n!!!!!!!!!!", flush=True)
                         counter += 1
                         break
