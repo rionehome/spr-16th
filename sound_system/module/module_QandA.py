@@ -5,8 +5,8 @@ import csv
 import numpy as np
 from pocketsphinx import LiveSpeech, get_model_path
 
-import module_pico
-import module_beep
+from . import module_pico
+from . import module_beep
 
 
 print("最初開始")
