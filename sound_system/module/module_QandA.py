@@ -90,7 +90,8 @@ def QandA(number):
                         log = open(log_path, 'a')
                         log.write(str(datetime.datetime.now()) + " [question]:  " + str(question) + "\n")
                         log.write(str(datetime.datetime.now()) + " [answer]:  " + question_dictionary[str(question)] + "\n")
-
+                        log.close()
+                        
                         print("\n\n!!!!!!!!!!", flush=True)
                         counter += 1
                         break
