@@ -25,7 +25,7 @@ def screenshot():
             if not depth_frame or not color_frame:
                 continue
             
-            depth_image = np.asanyarray(depth_frame.get_data())
+            depth_image = np.asanyarray(depth_frame.get_data())  # これ使われてないなんやこれ
             color_image = np.asanyarray(color_frame.get_data())
             images = color_image
             cv2.imshow('RealSense', images)
