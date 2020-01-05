@@ -24,6 +24,7 @@ ReSpeaker
 以下パソコンにReSpeakerを繋いだ状態で
 
 ```
+$ git checkout develop 
 $ cd sound_system/prepare_tools/
 $ sh respeaker.sh
 ```
