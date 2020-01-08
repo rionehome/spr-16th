@@ -76,7 +76,8 @@ class CIC(Node):
 
         target, command, content = self.tasks[task_number]
 
-        if callable(content): #sound から得られた angular を content に代入する
+        # content がcallable(関数)だったら一つ前のtaskの実行結果のcontentを引数に与えて実行した返り値にする
+        if callable(content):
             content = content(self.latest_return)
 
         msg = String()
