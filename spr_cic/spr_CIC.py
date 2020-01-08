@@ -21,10 +21,11 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
-                ["sound",   "count",   "None"],
-                ["control", "turn",    180   ],
-                ["image",   "capture", "None"],
-                ["sound",   "QandA",   "None"],
+                ["sound",   "count",        "None"],
+                ["control", "turn",         180],
+                ["image",   "capture",      "None"],
+                ["sound",   "count_people", lambda content: content],
+                ["sound",   "QandA",        "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
                 ["control", "turn",    0 ],
