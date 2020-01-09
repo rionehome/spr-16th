@@ -21,10 +21,11 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
-                ["sound",   "count",   "None"],
-                ["control", "turn",    180   ],
-                ["image",   "capture", "None"],
-                ["sound",   "QandA",   "None"],
+                ["sound",   "count",        "None"],
+                ["control", "turn",         180],
+                ["image",   "capture",      "None"],
+                ["sound",   "count_people", lambda content: content],
+                ["sound",   "QandA",        "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
                 ["control", "turn",    0 ],
@@ -75,7 +76,8 @@ class CIC(Node):
 
         target, command, content = self.tasks[task_number]
 
-        if callable(content): #sound から得られた angular を content に代入する
+        # content がcallable(関数)だったら一つ前のtaskの実行結果のcontentを引数に与えて実行した返り値にする
+        if callable(content):
             content = content(self.latest_return)
 
         msg = String()
