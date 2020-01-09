@@ -30,5 +30,5 @@ $ git checkout develop
 $ git clone https://github.com/ItoMasaki/turtlebot_bringup.git  
 $ colcon build  
 $ source install/setup.bash  
-$ ros2 launch spr_cic CIC_launch.py  
+$ ros2 launch spr_cic CIC.launch.py  
 ```
