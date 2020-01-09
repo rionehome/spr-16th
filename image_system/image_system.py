@@ -1,5 +1,6 @@
 from modules import face_detect
 from modules import screenshot
+from Gender_CNN import recognizer
 from std_msgs.msg import String
 import rclpy
 from rclpy.node import Node
@@ -41,9 +42,9 @@ class ImageSystem(Node):
         if 'capture' == command[0].replace('Command:', ''):
             print("start capture", flush=True)
             if screenshot.screenshot() == 1:
-                self.temp_number = face_detect.detect()
-                if self.temp_number >= 0:  # 人数のみカウントのとき
-                # if type(self.temp_number) == str: # 男女認識までできたとき
+                self.temp_number = recognizer.recognizer()
+                #if self.temp_number >= 0:  # 人数のみカウントのとき
+                if type(self.temp_number) == str: # 男女認識までできたとき
                     print("end capture", flush=True)
                     self.cerebrum_publisher(
                         'Return:0,Content:'+str(self.temp_number))
