@@ -1,3 +1,3 @@
-from infer import CNN
+from . import infer
 
-CNN(True)
+infer.CNN(True)

@@ -1,14 +1,14 @@
-    from infer import CNN
+from . import infer
 
 def recognizer():
     i = 0
     man = 0
     woman = 0
-    infer = CNN()
+    inf = infer.CNN()
 
     while i<3:
         pwd = './' + str(i) + '.jpg'
-        pred = infer.predict(pwd) 
+        pred = inf.predict(pwd) 
         print('man：%5.3f  woman：%5.3f' % (pred[0], pred[1]))
         if pred[0] > 0.5:
             man += 1
