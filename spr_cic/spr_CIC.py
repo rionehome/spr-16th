@@ -62,6 +62,9 @@ class CIC(Node):
 
         self.latest_return = content 
 
+        if len(self.tasks) <= self.executing_task_number:
+            return
+
         self.run_task(self.executing_task_number + 1)
 
     def run_task(self, task_number): 
