@@ -71,9 +71,6 @@ class CIC(Node):
         # 実行するタスクが連続でなければ、実行しない
         if task_number  != self.executing_task_number + 1: 
             return
-        if len(self.tasks) <= self.executing_task_number:  
-            return
-
         self.executing_task_number = task_number
 
         sleep(1)
