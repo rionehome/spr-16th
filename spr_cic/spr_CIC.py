@@ -24,14 +24,15 @@ class CIC(Node):
                 ["sound",   "count",        "None"],
                 ["control", "turn",         180],
                 ["image",   "capture",      "None"],
-                ["sound",   "count_people", lambda content: content],
+                ["sound",   "count_people", "2|3"],
                 ["sound",   "QandA",        "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
-                ["control", "turn",    0 ],
+                ["control", "turn",    lambda d:d ],
                 ["sound",   "answer", "None"]
             ] * 5) 
         ]
+        
         """
         [タスクのターゲット, コマンド名, 与えるデータ] の配列。
 
@@ -55,6 +56,10 @@ class CIC(Node):
 
     def subscribe_command(self,msg):
         m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
+        if(m == None):
+            print(msg.data)
+            raise Exception("message is invalid")
+
         return_str,content = m.groups()
           
         print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
