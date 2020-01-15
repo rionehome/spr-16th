@@ -44,6 +44,7 @@ class ControlSystem(Node):
 
         self.twist = Twist()
 
+
         self.goal_degree = 0
 
         self.is_running=False
@@ -151,6 +152,7 @@ class ControlSystem(Node):
         reset_flag.data = True
         self.reset_publisher.publish(reset_flag)
         print("pose rested", flush=True)
+
     """
     this method set pose of turtlebot to (0, 0, 0).
     turtlebot のポーズを(0, 0, 0)にセットする。
@@ -165,7 +167,6 @@ class ControlSystem(Node):
             raise Exception("angular_speed must be greater than 0.")
 
         print("received run_to", flush=True)
-
         self.goal_degree = self.normalize_goal_degree(goal_degree)
 
         self.reset_pose()
@@ -176,6 +177,7 @@ class ControlSystem(Node):
 
         self.velocity_publisher.publish(self.twist)
         print("running...", flush=True)
+        
     """
     this method let turtlebot running.
     Turtlebot を走らせる。
