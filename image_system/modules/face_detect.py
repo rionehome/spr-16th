@@ -1,4 +1,3 @@
-#カメラから画像を取得する部分は未実装です.
 import rclpy
 from rclpy.node import Node
 import cv2
@@ -13,40 +12,48 @@ from time import sleep
 
 def detect():
     file_path = os.path.abspath(__file__)
-    #カメラから取得した画像をおいてある場所
-    image_path = file_path.replace(
-        'modules/face.py', 'image/realsense.jpg')
-    #カスケードファイルをおいてある場所
-    cascade_path = file_path.replace(
-        'modules/face.py', 'cascades/haarcascade_frontalface_default.xml')
 
-    #画像データを開けなかったときにその旨をメッセージとして出力させる
+    # カメラから取得した画像をおいてある場所
+    image_path = ('/home/kohei/spr/spr-16th/image_system/image/people_image.jpg')
+        
+    # カスケードファイルをおいてある場所
+    cascade_path = file_path.replace('modules/face_detect.py', 'cascades/haarcascade_frontalface_default.xml')
+
     image = cv2.imread(image_path)
+
+    # 画像データを開けなかったときにその旨をメッセージとして出力させる
     if(image is None):
         print ('画像を開けません')
         quit()
 
-    #取得した画像をグレースケールに変換
+    # 取得した画像をグレースケールに変換
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     #カスケードに分類させる
     cascade = cv2.CascadeClassifier(cascade_path)
 
-    #物体認識（顔認識）の実行
+    # 物体認識（顔認識）の実行
     facerect = cascade.detectMultiScale(image_gray, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
 
     print ("face rectangle")
     print (facerect)
 
-    #ディレクトリの作成
-    if len(facerect) > 0:
+    
+    # ディレクトリの作成
+    if len(facerect) == None:
+        return str({0|0})
+    else:
         path = os.path.splitext(image_path)
+        print("path" + str(path))
         dir_path = path[0] + '_face'
+        print(str(dir_path))
+        print(dir_path[0])
         if os.path.isdir(dir_path):
             shutil.rmtree(dir_path)
         os.mkdir(dir_path)
 
-    i = 0;
+
+    i = 0
     for rect in facerect:
         #顔だけ切り出して保存
         x = rect[0]
@@ -59,5 +66,8 @@ def detect():
         i += 1
     files = os.listdir(dir_path)
     count = len(files)  
-    print(count)
+    print("\n人数は {} 人".format(count))
     return count
+
+if __name__=='__main__':
+    detect()

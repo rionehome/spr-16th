@@ -9,7 +9,7 @@ from . import module_pico
 from . import module_beep
 
 
-
+print("最初開始")
 file_path = os.path.abspath(__file__)
 question_dictionary = {}
 noise_words = {}
@@ -22,6 +22,7 @@ spr_gram_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/robocup_2019_sphinx.gram')
 csv_path = file_path.replace(
     'module/module_QandA.py', 'dictionary/QandA/robocup_2019.csv')
+log_path = file_path.replace('module/module_QandA.py', 'speak_log/{}.txt').format(str(datetime.datetime.now()))
 model_path = get_model_path()
 
 #Male a dictionary from txt file
@@ -51,8 +52,8 @@ def QandA(number):
 
     #If I have a question which I can answer, count 1
     while counter < number:
-        print("- "+str(counter+1)+" cycle -")
-        print("\n[*] LISTENING ...")
+        print("- "+str(counter+1)+" cycle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", flush=True)
+        print("\n[*] LISTENING ...", flush=True)
         #Setup live_speech
         setup_live_speech(False, spr_dict_path, spr_gram_path)
         module_beep.beep("start")
@@ -75,6 +76,7 @@ def QandA(number):
                         print("\n----------------------------\n", str(question), "\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
 
+
                     #Detect yes or no 
 
                     else:
@@ -83,6 +85,14 @@ def QandA(number):
                         print("\n-------your question--------\n",str(question),"\n----------------------------\n")
                         print("\n-----------answer-----------\n",question_dictionary[str(question)],"\n----------------------------\n")
                         module_pico.speak(question_dictionary[str(question)])
+
+                        # logの作成
+                        log = open(log_path, 'a')
+                        log.write(str(datetime.datetime.now()) + " [question]:  " + str(question) + "\n")
+                        log.write(str(datetime.datetime.now()) + " [answer]:  " + question_dictionary[str(question)] + "\n")
+                        log.close()
+                        
+                        print("\n\n!!!!!!!!!!", flush=True)
                         counter += 1
                         break
                 elif 0 < max <= 0.8:
@@ -91,6 +101,7 @@ def QandA(number):
                     answer = "Sorry I don't have answer." 
                     print("\n-----------answer-----------\n",answer,"\n----------------------------\n")
                     module_pico.speak(answer)
+                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     counter += 1
                     break
 

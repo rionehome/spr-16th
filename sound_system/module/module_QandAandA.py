@@ -1,6 +1,6 @@
-import module_beep
-import module_tuning
-import module_pico
+from . import module_beep
+from . import module_tuning
+from . import module_pico
 
 import usb.core
 import usb.util
@@ -8,6 +8,7 @@ import time
 import os
 import csv
 import math
+import datetime
 from pocketsphinx import LiveSpeech, get_model_path
 
 
@@ -24,6 +25,8 @@ file_path = os.path.abspath(__file__)
 csv_path =  file_path.replace('module/module_QandAandA.py', 'dictionary/QandA/robocup_2019.csv')
 dict_path = file_path.replace('module/module_QandAandA.py','dictionary/robocup_2019_sphinx.dict')
 gram_path = file_path.replace('module/module_QandAandA.py','dictionary/robocup_2019_sphinx.gram')
+log_path = file_path.replace('module/module_QandAandA.py', 'speak_log/{}.txt').format(str(datetime.datetime.now()))
+
 
 
 with open(csv_path, 'r') as f:
@@ -47,19 +50,26 @@ def angular():
 
     while True:
         # if dev:
+        module_beep.beep("start")
         for phrase in live_speech:
-            cos=0
+            cos = 0
             for question_key in question_dictionary.keys():
                 cos = calc_cos(str(phrase),question_key)
-                if cos>0.8:
+                if cos > 0.8:
                     module_beep.beep("stop")
-                    print("\n-------your question--------\n",str(phrase),"\n----------------------------\n")
-                    print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n")
-                    angular=Mic_tuning.direction
-                    answer=question_dictionary[str(phrase)]
+                    print("\n-------your question--------\n",str(phrase),"\n----------------------------\n", flush=True)
+                    print("\n-----------answer-----------\n",question_dictionary[str(phrase)],"\n----------------------------\n", flush=True)
+                    angular = Mic_tuning.direction
+                    answer = question_dictionary[str(phrase)]
+
+                    # logの作成
+                    log = open(log_path, 'a')
+                    log.write(str(datetime.datetime.now()) + " [question]:  " + str(phrase) + "\n")
+                    log.write(str(datetime.datetime.now()) + " [answer]:  " + answer + "\n")
+                    log.close()
+                    
                     return_list = [angular, answer]
-                    module_pico.speak(answer)
-                    print(angular)
+                    print("角度は {0} \n 答えは {1}".format(return_list[0], return_list[1], flush=True))
                     return return_list
                 else:
                     continue

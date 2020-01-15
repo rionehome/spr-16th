@@ -1,5 +1,8 @@
 build
-install
 log
-__pycache__
-turtlebot_bringup
+install
+__pycache__/
+turtlebot_bringup/
+speak_log/
+image/
+*.jpg

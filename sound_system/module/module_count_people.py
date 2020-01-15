@@ -1,7 +1,14 @@
+import os
+import datetime
 from . import module_pico
 from . import module_beep
 
 
+# logを作るファイルのパスを定義
+file_path = os.path.abspath(__file__)
+log_path = file_path.replace('module/module_count_people.py', 'speak_log/{}.txt').format(str(datetime.datetime.now()))
+
+'''
 # 人数のみのカウント
 def count_people(number): 
 
@@ -19,6 +26,12 @@ def count_people(number):
     module_beep.beep('stop')
     print(person_number)
     module_pico.speak(person_number)
+
+    # logの作成
+    log = open(log_path, 'a')
+    log.write(str(datetime.datetime.now()) + " [person recognition]:  " + person_number + "\n")
+    log.close()
+
     return 1
 
 '''
@@ -36,20 +49,26 @@ def count_people(string):
     ###############
 
     string = string.split('|')
-    person_string = 'There are {} people, the string of woman is {}, the string of men is {}.'.format(int(string[0])+int(string[1]), string[0], string[1])
+    person_string = 'There are {} people, the number of women is {}, the number of men is {}.'.format(int(string[0])+int(string[1]), string[0], string[1])
     module_beep.beep('stop')
     print(person_string)
     module_pico.speak(person_string)
+
+    # logの作成
+    log = open(log_path, 'a')
+    log.write(str(datetime.datetime.now()) + " [person recognition]:  " + person_string + "\n")
+    log.close()
+
     return 1
-'''
+
 
 if __name__ == '__main__':
+     # 男女人数のカウント
+    number = input("number of people [woman|man]")
+    count_people(number)
+    
+'''
     # 人数のみのカウント
     number = input("number of people :")
     count_people(number)
-
-'''
-    # 男女人数のカウント
-    number = input("number of people [woman|man]")
-    count_people(number)    
 '''

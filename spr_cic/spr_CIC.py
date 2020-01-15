@@ -5,76 +5,92 @@ from std_msgs.msg import String
 
 from time import sleep
 
+import re
+
 class CIC(Node):
     def __init__(self):
         super().__init__("CIC")
 
-        self.create_subscription(String, "/cerebrum/command", self.receive, 10)
-
-        self.timer = self.create_timer(2.0, self.state)
-
-        self.data = String()
+        self.create_subscription(String, "/cerebrum/command", self.subscribe_command, 10)
 
         sleep(1)
 
-        self.tasks = {
-            "1": ["sound",   "count",   "None"],
-            "2": ["control", "turn",    180   ],
-            "3": ["image",   "capture", "None"],
-            "4": ["sound",   "QandA",   5     ],
-            "5": ["sound",   "angular", "None"],
-            "6": ["sound",   "angular", "None"],
-            "7": ["sound",   "angular", "None"],
-            "8": ["sound",   "angular", "None"],
-            "9": ["sound",   "angular", "None"],
+        self.publisher_dict = {
+            "sound": self.create_publisher(String,"/sound_system/command",10), 
+            "control": self.create_publisher(String,"/control_system/command",10),
+            "image": self.create_publisher(String,"/image_system/command",10),
         }
+        self.tasks = [
+                ["sound",   "count",        "None"],
+                ["control", "turn",         180],
+                ["image",   "capture",      "None"],
+                ["sound",   "count_people", "2|3"],
+                ["sound",   "QandA",        "None"],
+            (*[
+                ["sound",   "angular_and_question", "None"],
+                ["control", "turn",    lambda d:d ],
+                ["sound",   "answer", "None"]
+            ] * 5) 
+        ]
+        
+        """
+        [タスクのターゲット, コマンド名, 与えるデータ] の配列。
 
-        self.executing = "1"
-        self.did = "0"
+        与えるデータは 単純な値もしくは１つ前のタスクの結果を引数に受け取る関数。
 
-        print("[*] START SPR", flush=True)
+        *([タスク] * 5) の部分は、配列 を 5回繰り返して展開している。
+        これで、
+            ["sound",   "angular_and_question", "None"],
+            ["control", "turn",    lambda d: d ],
+            ["sound",   "answer", "None"]
+        を5回繰り返すことになる。
+        """
+        
+        self.executing_task_number = -1
 
-    def state(self):
-        print("state start , executing {}, did {}" .format(self.executing, self.did), flush=True)
-        for number, task in self.tasks.items():
-            self.executing = number
-            if self.executing != self.did:
-                self.send_with_content(task[0], task[1], task[2])
-                print("CIC send content", flush=True)
-            self.did = self.executing
-            break
+        self.latest_return = None
 
-    def receive(self, msg):
-        print("CIC received " + msg.data, flush=True)  
-        flag = msg.data.split(",")[0].split(":")[1]
-        print("msg data " + str(msg.data), flush=True)
-        print("flag " + flag, flush=True)   #### flag = 0となっている  #####
 
-        number = "0"
-        task = None
+        self.angular =  -1
+        self.run_task(0)
 
-        for number, task in self.tasks.items():
-            print("number " + number, flush=True)
-            print("task " + str(task), flush=True)
-            break
+    def subscribe_command(self,msg):
+        m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
+        if(m == None):
+            print(msg.data)
+            raise Exception("message is invalid")
 
-        # if flag == task[1]:
-        print("finish " + str(self.tasks.pop(self.executing)), flush=True)  #### ここに入っていかない ###
-        # print("CCC", flush=True)   ############### ここまで行けた if 文がおかしかった ###############
+        return_str,content = m.groups()
+          
+        print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
+        print(f"return: {return_str}, content:{content}",flush=True)
 
-    def send_with_content(self, topic, Command, Content):
-        self.sound_system_pub = self.create_publisher(
-            String,
-            "/"+topic+"_system/command",
-            10
-        )
+        self.latest_return = content 
+
+        if len(self.tasks) <= self.executing_task_number:
+            return
+
+        self.run_task(self.executing_task_number + 1)
+
+    def run_task(self, task_number): 
+        # 実行するタスクが連続でなければ、実行しない
+        if task_number  != self.executing_task_number + 1: 
+            return
+        self.executing_task_number = task_number
 
         sleep(1)
 
-        print("send to /{0}_system/command Command:{1} Content:{2}".format(topic, Command, Content), flush=True)
+        target, command, content = self.tasks[task_number]
 
-        self.data.data = "Command:" + Command + ",Content:" + str(Content) + ":cerebrum"
-        self.sound_system_pub.publish(self.data)
+        # content がcallable(関数)だったら一つ前のtaskの実行結果のcontentを引数に与えて実行した返り値にする
+        if callable(content):
+            content = content(self.latest_return)
+
+        msg = String()
+        msg.data = f"Command:{command},Content:{str(content)}:cerebrum"
+        self.publisher_dict[target].publish(msg)
+        print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])} send.",flush=True)
+
 
 def main():
     rclpy.init()
