@@ -1,10 +1,8 @@
-#dlibで顔検出、CNNで性別と年齢推定
-
-from pathlib import Path
+import argparse
 import cv2
 import dlib
 import numpy as np
-import argparse
+from pathlib import Path
 from contextlib import contextmanager
 from wide_resnet import WideResNet
 from keras.utils.data_utils import get_file
@@ -12,7 +10,7 @@ from keras.utils.data_utils import get_file
 pretrained_model = "https://github.com/yu4u/age-gender-estimation/releases/download/v0.5/weights.28-3.73.hdf5"
 modhash = 'fbe63257a054c1c5466cfd7bf14646d6'
 
-#コマンドラインから指定できるようにする
+
 def get_args():
     parser = argparse.ArgumentParser(description="This script detects faces from web cam input, "
                                                  "and estimates age and gender for the detected faces.",
@@ -30,7 +28,8 @@ def get_args():
     args = parser.parse_args()
     return args
 
-#画像に書き込む
+
+
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
                font_scale=0.8, thickness=1):
     size = cv2.getTextSize(label, font, font_scale, thickness)[0]
@@ -75,8 +74,8 @@ def yield_images_from_dir(image_dir):
             r = 640 / max(w, h)
             yield cv2.resize(img, (int(w * r), int(h * r)))
 
-
 def main():
+
     args = get_args()
     depth = args.depth
     k = args.width
@@ -85,8 +84,6 @@ def main():
     image_dir = args.image_dir
     male_num=0
     female_num=0
-
-
 
     if not weight_file:
         #重みのファイルがないなら自動でファイルをダウンロードしてダウンロードしたファイルへのパスを返す
@@ -131,14 +128,10 @@ def main():
             #検出した顔から年齢と性別を予想
             results = model.predict(faces)
             predicted_genders = results[0]
-            ages = np.arange(0, 101).reshape(101, 1)
-            predicted_ages = results[1].dot(ages).flatten()
-            
 
             #結果をファイルに書き込む
             for i, d in enumerate(detected):
-                label = "{}, {}".format(int(predicted_ages[i]),
-                                        "M" if predicted_genders[i][0] < 0.5 else "F")
+                label = "{}".format("M" if predicted_genders[i][0] < 0.5 else "F")
                 draw_label(img, (d.left(), d.top()), label)
                 if predicted_genders[i][0] < 0.5:
                     male_num=male_num+1
