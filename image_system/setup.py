@@ -13,7 +13,7 @@ setup(
     ],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name + '/sex_detect', glob('./sex_detect/*.py'))
+        ('lib/' + package_name + '/modules', glob('./modules/*.py'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,

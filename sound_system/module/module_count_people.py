@@ -8,7 +8,7 @@ from . import module_beep
 file_path = os.path.abspath(__file__)
 log_path = file_path.replace('module/module_count_people.py', 'speak_log/{}.txt').format(str(datetime.datetime.now()))
 
-
+'''
 # 人数のみのカウント
 def count_people(number): 
 
@@ -60,15 +60,9 @@ def count_people(string):
     log.close()
 
     return 1
-'''
+
 
 if __name__ == '__main__':
-    # 人数のみのカウント
-    number = input("number of people :")
-    count_people(number)
-
-'''
     # 男女人数のカウント
     number = input("number of people [woman|man]")
-    count_people(number)    
-'''
+    count_people(number)

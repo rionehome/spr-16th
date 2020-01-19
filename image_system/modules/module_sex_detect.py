@@ -11,7 +11,7 @@ from keras.utils.data_utils import get_file
 pretrained_model = "https://github.com/yu4u/age-gender-estimation/releases/download/v0.5/weights.28-3.73.hdf5"
 modhash = 'fbe63257a054c1c5466cfd7bf14646d6'
 file_path = os.path.abspath(__file__)
-img_path=file_path.replace('module/module_sex_detect.py','image/people_image.jpg')
+img_path=file_path.replace('modules/module_sex_detect.py','image/people_image.jpg') # 画像のおいてあるディレクトリのパス 
 
 
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
@@ -73,7 +73,9 @@ def main():
                     male_num=male_num+1
                 else:
                     female_num=female_num+1
-            return male_num,female_num
+            print("woman : {0}, man : {1}".format(female_num, male_num), flush=True)
+            answer = str(female_num) + "|" + str(male_num)
+            return answer
 
 if __name__ == '__main__':
     main()
