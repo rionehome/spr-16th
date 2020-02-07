@@ -21,16 +21,18 @@ class CIC(Node):
             "image": self.create_publisher(String,"/image_system/command",10),
         }
         self.tasks = [
-                ["sound",   "count",   "None"],
-                ["control", "turn",    180   ],
-                ["image",   "capture", "None"],
-                ["sound",   "QandA",   "None"],
+                ["sound",   "count",        "None"],
+                ["control", "turn",         180],
+                ["image",   "capture",      "None"],
+                ["sound",   "count_people", "2|3"],
+                ["sound",   "QandA",        "None"],
             (*[
                 ["sound",   "angular_and_question", "None"],
-                ["control", "turn",    0 ],
+                ["control", "turn",    lambda d:d ],
                 ["sound",   "answer", "None"]
             ] * 5) 
         ]
+        
         """
         [タスクのターゲット, コマンド名, 与えるデータ] の配列。
 
@@ -54,6 +56,10 @@ class CIC(Node):
 
     def subscribe_command(self,msg):
         m = re.match(r"Return:([0-9]+),Content:(.+)",msg.data)
+        if(m == None):
+            print(msg.data)
+            raise Exception("message is invalid")
+
         return_str,content = m.groups()
           
         print(f"task {self.executing_task_number} : {str(self.tasks[self.executing_task_number])}is done.",flush=True)
@@ -61,21 +67,23 @@ class CIC(Node):
 
         self.latest_return = content 
 
+        if len(self.tasks) <= self.executing_task_number:
+            return
+
         self.run_task(self.executing_task_number + 1)
 
     def run_task(self, task_number): 
+        # 実行するタスクが連続でなければ、実行しない
         if task_number  != self.executing_task_number + 1: 
             return
-        if len(self.tasks) <= self.executing_task_number:  
-            return
-
         self.executing_task_number = task_number
 
         sleep(1)
 
         target, command, content = self.tasks[task_number]
 
-        if callable(content): #sound から得られた angular を content に代入する
+        # content がcallable(関数)だったら一つ前のtaskの実行結果のcontentを引数に与えて実行した返り値にする
+        if callable(content):
             content = content(self.latest_return)
 
         msg = String()

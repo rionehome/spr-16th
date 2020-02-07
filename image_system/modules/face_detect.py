@@ -14,7 +14,7 @@ def detect():
     file_path = os.path.abspath(__file__)
 
     # カメラから取得した画像をおいてある場所
-    image_path = file_path.replace('modules/face_detect.py', 'image/people_image.jpg')
+    image_path = ('/home/kohei/spr/spr-16th/image_system/image/people_image.jpg')
         
     # カスケードファイルをおいてある場所
     cascade_path = file_path.replace('modules/face_detect.py', 'cascades/haarcascade_frontalface_default.xml')
@@ -38,13 +38,20 @@ def detect():
     print ("face rectangle")
     print (facerect)
 
+    
     # ディレクトリの作成
-    if len(facerect) > 0:
+    if len(facerect) == None:
+        return str({0|0})
+    else:
         path = os.path.splitext(image_path)
+        print("path" + str(path))
         dir_path = path[0] + '_face'
+        print(str(dir_path))
+        print(dir_path[0])
         if os.path.isdir(dir_path):
             shutil.rmtree(dir_path)
         os.mkdir(dir_path)
+
 
     i = 0
     for rect in facerect:

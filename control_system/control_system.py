@@ -44,6 +44,7 @@ class ControlSystem(Node):
 
         self.twist = Twist()
 
+
         self.goal_degree = 0
 
         self.is_running=False
@@ -80,7 +81,7 @@ class ControlSystem(Node):
         if goal_degree == -180:
             goal_degree = -178
         
-        print("GOAL: " + str(goal_degree))
+        print("GOAL: " + str(goal_degree), flush=True)
         
         return goal_degree
     """
@@ -92,7 +93,7 @@ class ControlSystem(Node):
         angle = self.get_angle_by_pose(msg.pose)
         self.stop_turtlebot_judgement(angle)
         if self.is_running == True:
-            print(angle)
+            print(angle, flush=True)
     """
     this method is callback of `/turtlebot2/odometry` topic. 
     `/turtlebot2/odometry` トピックのコールバック。
@@ -100,6 +101,7 @@ class ControlSystem(Node):
 
     def subscribe_command(self,msg):
         command,content = self.parse_command(msg.data)
+        print(f"got command ${command} width content: ${content}", flush=True)
         if command =="turn":
             self.turn_to(int(content),30.0)
     """
@@ -118,7 +120,7 @@ class ControlSystem(Node):
     def stop_turtlebot_judgement(self,turtlebot_angle):
         if self.is_running == True:
             if (self.goal_degree > 0 and turtlebot_angle > self.goal_degree) or (self.goal_degree < 0 and turtlebot_angle < self.goal_degree):
-                print(f"goal_degree :{self.goal_degree},angular :{turtlebot_angle}")
+                print(f"goal_degree :{self.goal_degree},angular :{turtlebot_angle}", flush=True)
                 self.stop_turtlebot()
     """
     this method is judgment of stopping turtlebot
@@ -127,7 +129,7 @@ class ControlSystem(Node):
 
     def stop_turtlebot(self):
         self.twist.angular.z = 0.0
-        print("STOP TURTLEBOT")
+        print("STOP TURTLEBOT", flush=True)
         self.is_running=False
         self.velocity_publisher.publish(self.twist)
         self.cerebrum_publisher('Return:0,Content:True')
@@ -149,7 +151,8 @@ class ControlSystem(Node):
         reset_flag = Bool()
         reset_flag.data = True
         self.reset_publisher.publish(reset_flag)
-        print("pose rested")
+        print("pose rested", flush=True)
+
     """
     this method set pose of turtlebot to (0, 0, 0).
     turtlebot のポーズを(0, 0, 0)にセットする。
@@ -157,14 +160,13 @@ class ControlSystem(Node):
 
     def turn_to(self, goal_degree, angular_speed):
         if (not self.is_running) and (angular_speed==0) :     #止まってる際に(速さ)0を連続で送らないようにする
-            print("if(not self.is_running) and (angular_speed==0)")
+            print("if(not self.is_running) and (angular_speed==0)", flush=True)
             return
 
-        if angular_speed < 0.0:
+        if angular_speed <= 0.0:
             raise Exception("angular_speed must be greater than 0.")
 
-        print("received run_to")
-
+        print("received run_to", flush=True)
         self.goal_degree = self.normalize_goal_degree(goal_degree)
 
         self.reset_pose()
@@ -174,7 +176,8 @@ class ControlSystem(Node):
         self.is_running = angular_speed != 0
 
         self.velocity_publisher.publish(self.twist)
-        print("running...")
+        print("running...", flush=True)
+        
     """
     this method let turtlebot running.
     Turtlebot を走らせる。
@@ -185,6 +188,7 @@ def main():
 
     node = ControlSystem()
 
+    node.turn_to(180,30)
     rclpy.spin(node)
 
 if __name__ == "__main__":

@@ -5,8 +5,9 @@ import cv2
 import os
 
 file_path = os.path.abspath(__file__)
-image_path = file_path.replace(
-    'modules/screenshot.py', 'image/people_image.jpg')
+image_path = ('/home/kohei/spr/spr-16th/image_system/image/people_image.jpg')
+#file_path.replace(
+    #'modules/screenshot.py', 'image/people_image.jpg')
 
 
 def screenshot():
@@ -33,6 +34,7 @@ def screenshot():
             cv2.imwrite(image_path, images)
             sleep(1)
             i = i + 1
+            print("captured" + str(i))
 
     finally:
 
