@@ -13,8 +13,7 @@ setup(
     ],
     data_files=[
         ('lib/' + package_name, ['package.xml']),
-        ('lib/' + package_name + '/cascades', glob('./cascades/*')),
-        ('lib/' + package_name + '/modules', glob('./modules/*'))
+        ('lib/' + package_name + '/modules', glob('./modules/*.py'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,

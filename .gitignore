@@ -1,8 +1,9 @@
 build
 log
 install
-__pycache__/
 turtlebot_bringup/
+__pycache__/
 speak_log/
+beep/
 image/
 *.jpg

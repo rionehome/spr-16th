@@ -61,14 +61,7 @@ def count_people(string):
 
     return 1
 
-
 if __name__ == '__main__':
-     # 男女人数のカウント
+    # 男女人数のカウント
     number = input("number of people [woman|man]")
     count_people(number)
-    
-'''
-    # 人数のみのカウント
-    number = input("number of people :")
-    count_people(number)
-'''
