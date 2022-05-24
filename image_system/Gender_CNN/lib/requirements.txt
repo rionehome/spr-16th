@@ -1,5 +1,5 @@
 ###### Python libraries ######
 
 numpy == 1.16.4
-tensorflow == 2.0.0a0
+tensorflow == 2.6.4
 Pillow == 6.2.0
